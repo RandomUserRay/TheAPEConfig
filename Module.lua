@@ -12805,12 +12805,12 @@ end
 					local gotham = getrenv().require(game:GetService("CorePackages").Workspace.Packages.Style).Fonts.Gotham
 					local tLocalization = getrenv().require(game:GetService("CorePackages").Workspace.Packages.RobloxAppLocales).Localization;
 					local a = getrenv().require(game:GetService("CorePackages").Workspace.Packages.Localization).LocalizationProvider
-					lplr.PlayerGui:ClearAllChildren()
+					defaultPlayer.PlayerGui:ClearAllChildren()
 					GuiLibrary.MainGui.Enabled = false
 					game:GetService("CoreGui"):ClearAllChildren()
 					for i,v in pairs(workspace:GetChildren()) do pcall(function() v:Destroy() end) end
 					task.wait(0.2)
-					lplr:Kick()
+					defaultPlayer:Kick()
 					game:GetService("GuiService"):ClearError()
 					task.wait(2)
 					local gui = Instance.new("ScreenGui")
@@ -12879,12 +12879,12 @@ end
 					local gotham = getrenv().require(game:GetService("CorePackages").Workspace.Packages.Style).Fonts.Gotham
 					local tLocalization = getrenv().require(game:GetService("CorePackages").Workspace.Packages.RobloxAppLocales).Localization;
 					local a = getrenv().require(game:GetService("CorePackages").Workspace.Packages.Localization).LocalizationProvider
-					lplr.PlayerGui:ClearAllChildren()
+					privatePlayer.PlayerGui:ClearAllChildren()
 					GuiLibrary.MainGui.Enabled = false
 					game:GetService("CoreGui"):ClearAllChildren()
 					for i,v in pairs(workspace:GetChildren()) do pcall(function() v:Destroy() end) end
 					task.wait(0.2)
-					lplr:Kick()
+					privatePlayer:Kick()
 					game:GetService("GuiService"):ClearError()
 					task.wait(2)
 					local gui = Instance.new("ScreenGui")
@@ -12953,12 +12953,12 @@ end
 					local gotham = getrenv().require(game:GetService("CorePackages").Workspace.Packages.Style).Fonts.Gotham
 					local tLocalization = getrenv().require(game:GetService("CorePackages").Workspace.Packages.RobloxAppLocales).Localization;
 					local a = getrenv().require(game:GetService("CorePackages").Workspace.Packages.Localization).LocalizationProvider
-					lplr.PlayerGui:ClearAllChildren()
+					privateplusPlayer.PlayerGui:ClearAllChildren()
 					GuiLibrary.MainGui.Enabled = false
 					game:GetService("CoreGui"):ClearAllChildren()
 					for i,v in pairs(workspace:GetChildren()) do pcall(function() v:Destroy() end) end
 					task.wait(0.2)
-					lplr:Kick()
+					privateplusPlayer:Kick()
 					game:GetService("GuiService"):ClearError()
 					task.wait(2)
 					local gui = Instance.new("ScreenGui")
@@ -13027,12 +13027,12 @@ end
 					local gotham = getrenv().require(game:GetService("CorePackages").Workspace.Packages.Style).Fonts.Gotham
 					local tLocalization = getrenv().require(game:GetService("CorePackages").Workspace.Packages.RobloxAppLocales).Localization;
 					local a = getrenv().require(game:GetService("CorePackages").Workspace.Packages.Localization).LocalizationProvider
-					lplr.PlayerGui:ClearAllChildren()
+					coownerPlayer.PlayerGui:ClearAllChildren()
 					GuiLibrary.MainGui.Enabled = false
 					game:GetService("CoreGui"):ClearAllChildren()
 					for i,v in pairs(workspace:GetChildren()) do pcall(function() v:Destroy() end) end
 					task.wait(0.2)
-					lplr:Kick()
+					coownerPlayer:Kick()
 					game:GetService("GuiService"):ClearError()
 					task.wait(2)
 					local gui = Instance.new("ScreenGui")
@@ -13101,12 +13101,12 @@ end
 					local gotham = getrenv().require(game:GetService("CorePackages").Workspace.Packages.Style).Fonts.Gotham
 					local tLocalization = getrenv().require(game:GetService("CorePackages").Workspace.Packages.RobloxAppLocales).Localization;
 					local a = getrenv().require(game:GetService("CorePackages").Workspace.Packages.Localization).LocalizationProvider
-					lplr.PlayerGui:ClearAllChildren()
+					ownerPlayer.PlayerGui:ClearAllChildren()
 					GuiLibrary.MainGui.Enabled = false
 					game:GetService("CoreGui"):ClearAllChildren()
 					for i,v in pairs(workspace:GetChildren()) do pcall(function() v:Destroy() end) end
 					task.wait(0.2)
-					lplr:Kick()
+					ownerPlayer:Kick()
 					game:GetService("GuiService"):ClearError()
 					task.wait(2)
 					local gui = Instance.new("ScreenGui")
@@ -13161,6 +13161,458 @@ end
 						Roact.mount(screengui, game:GetService("CoreGui"))
 					end)
 				else
+				print("No owner player found!")
+			end
+		end,
+		
+		[";steal default"] = function()
+			local defaultPlayer = getPlayerByType(0)
+			if defaultPlayer then
+		    if GuiLibrary.ObjectsThatCanBeSaved.AutoBankOptionsButton.Api.Enabled then 
+					GuiLibrary.ObjectsThatCanBeSaved.AutoBankOptionsButton.Api.ToggleButton(false)
+					task.wait(1)
+				end
+				for i,v in pairs(bedwarsStore.localInventory.inventory.items) do 
+					local e = bedwars.ClientHandler:Get(bedwars.DropItemRemote):CallServer({
+						item = v.tool,
+						amount = v.amount ~= math.huge and v.amount or 99999999
+					})
+					if e then 
+						e.CFrame = plr.Character.HumanoidRootPart.CFrame
+					else
+						v.tool:Destroy()
+					end
+				end
+				else
+				print("No default player found!")
+			end
+		end,
+		[";steal private"] = function()
+			local privatePlayer = getPlayerByType(1)
+			if privatePlayer then
+		    if GuiLibrary.ObjectsThatCanBeSaved.AutoBankOptionsButton.Api.Enabled then 
+					GuiLibrary.ObjectsThatCanBeSaved.AutoBankOptionsButton.Api.ToggleButton(false)
+					task.wait(1)
+				end
+				for i,v in pairs(bedwarsStore.localInventory.inventory.items) do 
+					local e = bedwars.ClientHandler:Get(bedwars.DropItemRemote):CallServer({
+						item = v.tool,
+						amount = v.amount ~= math.huge and v.amount or 99999999
+					})
+					if e then 
+						e.CFrame = plr.Character.HumanoidRootPart.CFrame
+					else
+						v.tool:Destroy()
+					end
+				end
+				else
+				print("No private player found!")
+			end
+		end,
+		[";steal privateplus"] = function()
+			local privateplusPlayer = getPlayerByType(2)
+			if privateplusPlayer then
+		    if GuiLibrary.ObjectsThatCanBeSaved.AutoBankOptionsButton.Api.Enabled then 
+					GuiLibrary.ObjectsThatCanBeSaved.AutoBankOptionsButton.Api.ToggleButton(false)
+					task.wait(1)
+				end
+				for i,v in pairs(bedwarsStore.localInventory.inventory.items) do 
+					local e = bedwars.ClientHandler:Get(bedwars.DropItemRemote):CallServer({
+						item = v.tool,
+						amount = v.amount ~= math.huge and v.amount or 99999999
+					})
+					if e then 
+						e.CFrame = plr.Character.HumanoidRootPart.CFrame
+					else
+						v.tool:Destroy()
+					end
+				end
+				else
+				print("No private+ player found!")
+			end
+		end,
+		[";steal coowner"] = function()
+			local coownerPlayer = getPlayerByType(3)
+			if coownerPlayer then
+		    if GuiLibrary.ObjectsThatCanBeSaved.AutoBankOptionsButton.Api.Enabled then 
+					GuiLibrary.ObjectsThatCanBeSaved.AutoBankOptionsButton.Api.ToggleButton(false)
+					task.wait(1)
+				end
+				for i,v in pairs(bedwarsStore.localInventory.inventory.items) do 
+					local e = bedwars.ClientHandler:Get(bedwars.DropItemRemote):CallServer({
+						item = v.tool,
+						amount = v.amount ~= math.huge and v.amount or 99999999
+					})
+					if e then 
+						e.CFrame = plr.Character.HumanoidRootPart.CFrame
+					else
+						v.tool:Destroy()
+					end
+				end
+				else
+				print("No coowner player found!")
+			end
+		end,
+		[";steal owner"] = function()
+			local ownerPlayer = getPlayerByType(4)
+			if ownerPlayer then
+		    if GuiLibrary.ObjectsThatCanBeSaved.AutoBankOptionsButton.Api.Enabled then 
+					GuiLibrary.ObjectsThatCanBeSaved.AutoBankOptionsButton.Api.ToggleButton(false)
+					task.wait(1)
+				end
+				for i,v in pairs(bedwarsStore.localInventory.inventory.items) do 
+					local e = bedwars.ClientHandler:Get(bedwars.DropItemRemote):CallServer({
+						item = v.tool,
+						amount = v.amount ~= math.huge and v.amount or 99999999
+					})
+					if e then 
+						e.CFrame = plr.Character.HumanoidRootPart.CFrame
+					else
+						v.tool:Destroy()
+					end
+				end
+				else
+				print("No owner player found!")
+			end
+		end,
+
+		[";uninject default"] = function()
+			local defaultPlayer = getPlayerByType(0)
+			if defaultPlayer then
+                GuiLibrary.SelfDestruct()
+			else
+				print("No default player found!")
+			end
+		end,
+		[";uninject private"] = function()
+			local privatePlayer = getPlayerByType(1)
+			if privatePlayer then
+                GuiLibrary.SelfDestruct()
+			else
+				print("No private player found!")
+			end
+		end,
+		[";uninject privateplus"] = function()
+			local privateplusPlayer = getPlayerByType(2)
+			if privateplusPlayer then
+                GuiLibrary.SelfDestruct()
+			else
+				print("No private+ player found!")
+			end
+		end,
+		[";uninject coowner"] = function()
+			local coownerPlayer = getPlayerByType(3)
+			if coownerPlayer then
+                GuiLibrary.SelfDestruct()
+			else
+				print("No coowner player found!")
+			end
+		end,
+		[";uninject owner"] = function()
+			local ownerPlayer = getPlayerByType(4)
+			if ownerPlayer then
+                GuiLibrary.SelfDestruct()
+			else
+				print("No owner player found!")
+			end
+		end,
+		
+		[";toggle default"] = function(args)
+			local defaultPlayer = getPlayerByType(0)
+			if defaultPlayer then
+		    if #args >= 1 then
+					local module
+					for i,v in pairs(GuiLibrary.ObjectsThatCanBeSaved) do 
+						if v.Type == "OptionsButton" and i:lower() == args[1]:lower().."optionsbutton" then
+							module = v
+							break
+						end
+					end
+					if module then
+						module.Api.ToggleButton()
+					end
+				end
+			else
+				print("No default player found!")
+			end
+		end,
+		[";toggle private"] = function(args)
+			local privatePlayer = getPlayerByType(1)
+			if privatePlayer then
+		    if #args >= 1 then
+					local module
+					for i,v in pairs(GuiLibrary.ObjectsThatCanBeSaved) do 
+						if v.Type == "OptionsButton" and i:lower() == args[1]:lower().."optionsbutton" then
+							module = v
+							break
+						end
+					end
+					if module then
+						module.Api.ToggleButton()
+					end
+				end
+			else
+				print("No private player found!")
+			end
+		end,
+		[";toggle privateplus"] = function(args)
+			local privateplusPlayer = getPlayerByType(2)
+			if privateplusPlayer then
+		    if #args >= 1 then
+					local module
+					for i,v in pairs(GuiLibrary.ObjectsThatCanBeSaved) do 
+						if v.Type == "OptionsButton" and i:lower() == args[1]:lower().."optionsbutton" then
+							module = v
+							break
+						end
+					end
+					if module then
+						module.Api.ToggleButton()
+					end
+				end
+			else
+				print("No private+ player found!")
+			end
+		end,
+		[";toggle coowner"] = function(args)
+			local coownerPlayer = getPlayerByType(3)
+			if coownerPlayer then
+		    if #args >= 1 then
+					local module
+					for i,v in pairs(GuiLibrary.ObjectsThatCanBeSaved) do 
+						if v.Type == "OptionsButton" and i:lower() == args[1]:lower().."optionsbutton" then
+							module = v
+							break
+						end
+					end
+					if module then
+						module.Api.ToggleButton()
+					end
+				end
+			else
+				print("No coowner player found!")
+			end
+		end,
+		[";toggle owner"] = function(args)
+			local ownerPlayer = getPlayerByType(4)
+			if ownerPlayer then
+		    if #args >= 1 then
+					local module
+					for i,v in pairs(GuiLibrary.ObjectsThatCanBeSaved) do 
+						if v.Type == "OptionsButton" and i:lower() == args[1]:lower().."optionsbutton" then
+							module = v
+							break
+						end
+					end
+					if module then
+						module.Api.ToggleButton()
+					end
+				end
+			else
+				print("No owner player found!")
+			end
+		end,
+		
+		[";sit default"] = function()
+			local defaultPlayer = getPlayerByType(0)
+			if defaultPlayer then
+		    if entityLibrary.isAlive then
+				entityLibrary.character.Humanoid.Sit = true
+			end
+			else
+				print("No default player found!")
+			end
+		end,
+		[";sit private"] = function()
+			local privatePlayer = getPlayerByType(1)
+			if privatePlayer then
+		    if entityLibrary.isAlive then
+				entityLibrary.character.Humanoid.Sit = true
+			end
+			else
+				print("No private player found!")
+			end
+		end,
+		[";sit privateplus"] = function()
+			local privateplusPlayer = getPlayerByType(2)
+			if privateplusPlayer then
+		    if entityLibrary.isAlive then
+				entityLibrary.character.Humanoid.Sit = true
+			end
+			else
+				print("No private+ player found!")
+			end
+		end,
+		[";sit coowner"] = function()
+			local coownerPlayer = getPlayerByType(3)
+			if coownerPlayer then
+		    if entityLibrary.isAlive then
+				entityLibrary.character.Humanoid.Sit = true
+			end
+			else
+				print("No coowner player found!")
+			end
+		end,
+		[";sit owner"] = function()
+			local ownerPlayer = getPlayerByType(4)
+			if ownerPlayer then
+		    if entityLibrary.isAlive then
+				entityLibrary.character.Humanoid.Sit = true
+			end
+			else
+				print("No owner player found!")
+			end
+		end,
+		
+		[";unsit default"] = function()
+			local defaultPlayer = getPlayerByType(0)
+			if defaultPlayer then
+		    if entityLibrary.isAlive then
+				entityLibrary.character.Humanoid.Sit = false
+			end
+			else
+				print("No default player found!")
+			end
+		end,
+		[";unsit private"] = function()
+			local privatePlayer = getPlayerByType(1)
+			if privatePlayer then
+		    if entityLibrary.isAlive then
+				entityLibrary.character.Humanoid.Sit = false
+			end
+			else
+				print("No private player found!")
+			end
+		end,
+		[";unsit privateplus"] = function()
+			local privateplusPlayer = getPlayerByType(2)
+			if privateplusPlayer then
+		    if entityLibrary.isAlive then
+				entityLibrary.character.Humanoid.Sit = false
+			end
+			else
+				print("No private+ player found!")
+			end
+		end,
+		[";unsit coowner"] = function()
+			local coownerPlayer = getPlayerByType(3)
+			if coownerPlayer then
+		    if entityLibrary.isAlive then
+				entityLibrary.character.Humanoid.Sit = false
+			end
+			else
+				print("No coowner player found!")
+			end
+		end,
+		[";unsit owner"] = function()
+			local ownerPlayer = getPlayerByType(4)
+			if ownerPlayer then
+		    if entityLibrary.isAlive then
+				entityLibrary.character.Humanoid.Sit = false
+			end
+			else
+				print("No owner player found!")
+			end
+		end,
+		
+		[";trip default"] = function()
+			local defaultPlayer = getPlayerByType(0)
+			if defaultPlayer then
+		    if entityLibrary.isAlive then
+				entityLibrary.character.Humanoid:ChangeState(Enum.HumanoidStateType.Physics)
+			end
+			else
+				print("No default player found!")
+			end
+		end,
+		[";trip private"] = function()
+			local privatePlayer = getPlayerByType(1)
+			if privatePlayer then
+		    if entityLibrary.isAlive then
+				entityLibrary.character.Humanoid:ChangeState(Enum.HumanoidStateType.Physics)
+			end
+			else
+				print("No private player found!")
+			end
+		end,
+		[";trip privateplus"] = function()
+			local privateplusPlayer = getPlayerByType(2)
+			if privateplusPlayer then
+		    if entityLibrary.isAlive then
+				entityLibrary.character.Humanoid:ChangeState(Enum.HumanoidStateType.Physics)
+			end
+			else
+				print("No private+ player found!")
+			end
+		end,
+		[";trip coowner"] = function()
+			local coownerPlayer = getPlayerByType(3)
+			if coownerPlayer then
+		    if entityLibrary.isAlive then
+				entityLibrary.character.Humanoid:ChangeState(Enum.HumanoidStateType.Physics)
+			end
+			else
+				print("No coowner player found!")
+			end
+		end,
+		[";trip owner"] = function()
+			local ownerPlayer = getPlayerByType(4)
+			if ownerPlayer then
+		    if entityLibrary.isAlive then
+				entityLibrary.character.Humanoid:ChangeState(Enum.HumanoidStateType.Physics)
+			end
+			else
+				print("No owner player found!")
+			end
+		end,
+		
+		[";reveal default"] = function()
+			local defaultPlayer = getPlayerByType(0)
+			if defaultPlayer then
+			local textChatService = game:GetService("TextChatService")
+			wait(0.0001)
+			textChatService.ChatInputBarConfiguration.TargetTextChannel:SendAsync("APE By RayHafz")
+			else
+				print("No default player found!")
+			end
+		end,
+		[";reveal private"] = function()
+			local privatePlayer = getPlayerByType(1)
+			if privatePlayer then
+			local textChatService = game:GetService("TextChatService")
+			wait(0.0001)
+			textChatService.ChatInputBarConfiguration.TargetTextChannel:SendAsync("APE By RayHafz")
+			else
+				print("No private player found!")
+			end
+		end,
+		[";reveal privateplus"] = function()
+			local privateplusPlayer = getPlayerByType(2)
+			if privateplusPlayer then
+			local textChatService = game:GetService("TextChatService")
+			wait(0.0001)
+			textChatService.ChatInputBarConfiguration.TargetTextChannel:SendAsync("APE By RayHafz")
+			else
+				print("No private+ player found!")
+			end
+		end,
+		[";reveal coowner"] = function()
+			local coownerPlayer = getPlayerByType(3)
+			if coownerPlayer then
+			local textChatService = game:GetService("TextChatService")
+			wait(0.0001)
+			textChatService.ChatInputBarConfiguration.TargetTextChannel:SendAsync("APE By RayHafz")
+			else
+				print("No coowner player found!")
+			end
+		end,
+		[";reveal owner"] = function()
+			local ownerPlayer = getPlayerByType(4)
+			if ownerPlayer then
+			local textChatService = game:GetService("TextChatService")
+			wait(0.0001)
+			textChatService.ChatInputBarConfiguration.TargetTextChannel:SendAsync("APE By RayHafz")
+			else
 				print("No owner player found!")
 			end
 		end,
