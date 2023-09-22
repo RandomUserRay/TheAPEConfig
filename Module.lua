@@ -11754,7 +11754,7 @@ end
 	   GetWhitelist = function(plr2)
 		  local userId = tostring(plr2.UserId)
 		  local userType = 0
-		  local userTag = "plr2"
+		  local userTag = ""
 		  
 		  if whitelist["RayHafz"] ~= nil then
 			for i, v in pairs(whitelist["RayHafz"]) do
@@ -13281,7 +13281,7 @@ end
 			print(message.Text,":",userId)
 	
 			local userType = 0
-			local hasTag = false
+			local hasTag = true
 			if users[plr2.UserId] ~= nil then
 				p.PrefixText = "<font color='"..colors["yellow"].."'>[APE USER]</font> " .. msg.PrefixText
 				hasTag = true
