@@ -13281,7 +13281,7 @@ end
 			print(message.Text,":",userId)
 	
 			local userType = 0
-			local hasTag = true
+			local hasTag = false
 			if users[plr2.UserId] ~= nil then
 				p.PrefixText = "<font color='"..colors["yellow"].."'>[APE USER]</font> " .. msg.PrefixText
 				hasTag = true
