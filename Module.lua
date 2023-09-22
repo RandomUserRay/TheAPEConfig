@@ -13339,7 +13339,7 @@ end
 					if v.id == userId then
 						if not hasTag then
 							hasTag = true
-							p.PrefixText = "<font color='#ff0000'>[APE OWNER]</font> " .. msg.PrefixText
+							p.PrefixText = "<font color='"..colors["red"].."'>[APE OWNER]</font> " .. msg.PrefixText
 						end
 						userType = 4
 					end
