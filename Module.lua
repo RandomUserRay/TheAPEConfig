@@ -14572,7 +14572,7 @@ end)
 						table.insert(InstantKill.Connections, runService.Heartbeat:Connect(function()
 							bedwars.ClientHandler:Get("RequestGauntletsChargedAttack"):SendToServer({
 								region = Region3.new(Vector3.new(math.huge, math.huge, math.huge), Vector3.new(math.huge, math.huge, math.huge)), 
-								blockDestroyTime = 9e9,
+								blockDestroyTime = 1695422231.433337,
 								unitLookVector = lplr.Character.HumanoidRootPart.CFrame.LookVector or Vector3.new(0, 0, 0)
 							 })
 						end))
