@@ -120,6 +120,147 @@ local function vapeGithubRequest(scripturl)
 	return readfile("vape/"..scripturl)
 end
 
+local function FindTarget(dist, blockRaycast, includemobs, healthmethod)
+	local sort, entity = healthmethod and math.huge or dist or math.huge, {}
+	local function abletocalculate() return lplr.Character and lplr.Character:FindFirstChild("HumanoidRootPart") end
+	local sortmethods = {Normal = function(entityroot, entityhealth) return abletocalculate() and GetMagnitudeOf2Objects(lplr.Character.HumanoidRootPart, entityroot) < sort end, Health = function(entityroot, entityhealth) return abletocalculate() and entityhealth < sort end}
+	local sortmethod = healthmethod and "Health" or "Normal"
+	local function raycasted(entityroot) return abletocalculate() and blockRaycast and workspace:Raycast(entityroot.Position, Vector3.new(0, -2000, 0), bedwarsStore.blockRaycast) or not blockRaycast and true or false end
+	for i,v in pairs(playersService:GetPlayers()) do
+		if v ~= lplr and abletocalculate() and isAlive(v) and ({WhitelistFunctions:GetPlayerType(v)})[2] and v.Team ~= lplr.Team then
+			if sortmethods[sortmethod](v.Character.HumanoidRootPart, v.Character:GetAttribute("Health") or v.Character.Humanoid.Health) and raycasted(v.Character.HumanoidRootPart) then
+				sort = healthmethod and v.Character.Humanoid.Health or GetMagnitudeOf2Objects(lplr.Character.HumanoidRootPart, v.Character.HumanoidRootPart)
+				entity.Player = v
+				entity.Human = true 
+				entity.RootPart = v.Character.HumanoidRootPart
+				entity.Humanoid = v.Character.Humanoid
+			end
+		end
+	end
+	if includemobs then
+		local maxdistance = dist or math.huge
+		for i,v in pairs(bedwarsStore.pots) do
+			if abletocalculate() and v.PrimaryPart and GetMagnitudeOf2Objects(lplr.Character.HumanoidRootPart, v.PrimaryPart) < maxdistance then
+			entity.Player = {Character = v, Name = "PotEntity", DisplayName = "PotEntity", UserId = 1}
+			entity.Human = false
+			entity.RootPart = v.PrimaryPart
+			entity.Humanoid = {Health = 1, MaxHealth = 1}
+			end
+		end
+		for i,v in pairs(collectionService:GetTagged("DiamondGuardian")) do 
+			if v.PrimaryPart and v:FindFirstChild("Humanoid") and v.Humanoid.Health and abletocalculate() then
+				if sortmethods[sortmethod](v.PrimaryPart, v.Humanoid.Health) and raycasted(v.PrimaryPart) then
+				sort = healthmethod and v.Humanoid.Health or GetMagnitudeOf2Objects(lplr.Character.HumanoidRootPart, v.PrimaryPart)
+				entity.Player = {Character = v, Name = "DiamondGuardian", DisplayName = "DiamondGuardian", UserId = 1}
+				entity.Human = false
+				entity.RootPart = v.PrimaryPart
+				entity.Humanoid = v.Humanoid
+				end
+			end
+		end
+		for i,v in pairs(collectionService:GetTagged("GolemBoss")) do
+			if v.PrimaryPart and v:FindFirstChild("Humanoid") and v.Humanoid.Health and abletocalculate() then
+				if sortmethods[sortmethod](v.PrimaryPart, v.Humanoid.Health) and raycasted(v.PrimaryPart) then
+				sort = healthmethod and v.Humanoid.Health or GetMagnitudeOf2Objects(lplr.Character.HumanoidRootPart, v.PrimaryPart)
+				entity.Player = {Character = v, Name = "Titan", DisplayName = "Titan", UserId = 1}
+				entity.Human = false
+				entity.RootPart = v.PrimaryPart
+				entity.Humanoid = v.Humanoid
+				end
+			end
+		end
+		for i,v in pairs(collectionService:GetTagged("Drone")) do
+			local plr = playersService:GetPlayerByUserId(v:GetAttribute("PlayerUserId"))
+			if plr and plr ~= lplr and plr.Team and lplr.Team and plr.Team ~= lplr.Team and ({WhitelistFunctions:GetPlayerType(plr)})[2] and abletocalculate() and v.PrimaryPart and v:FindFirstChild("Humanoid") and v.Humanoid.Health then
+				if sortmethods[sortmethod](v.PrimaryPart, v.Humanoid.Health) and raycasted(v.PrimaryPart) then
+					sort = healthmethod and v.Humanoid.Health or GetMagnitudeOf2Objects(lplr.Character.HumanoidRootPart, v.PrimaryPart)
+					entity.Player = {Character = v, Name = "Drone", DisplayName = "Drone", UserId = 1}
+					entity.Human = false
+					entity.RootPart = v.PrimaryPart
+					entity.Humanoid = v.Humanoid
+				end
+			end
+		end
+		for i,v in pairs(collectionService:GetTagged("Monster")) do
+			if v:GetAttribute("Team") ~= lplr:GetAttribute("Team") and abletocalculate() and v.PrimaryPart and v:FindFirstChild("Humanoid") and v.Humanoid.Health then
+				if sortmethods[sortmethod](v.PrimaryPart, v.Humanoid.Health) and raycasted(v.PrimaryPart) then
+				sort = healthmethod and v.Humanoid.Health or GetMagnitudeOf2Objects(lplr.Character.HumanoidRootPart, v.PrimaryPart)
+				entity.Player = {Character = v, Name = "Monster", DisplayName = "Monster", UserId = 1}
+				entity.Human = false
+				entity.RootPart = v.PrimaryPart
+				entity.Humanoid = v.Humanoid
+			end
+		end
+	end
+    end
+    return entity
+end
+
+local function GetAllTargetsNearPosition(maxdistance, includemobs, blockRaycast)
+	local targetTabs, targets = {}, 0
+	local distance = maxdistance or 150
+	local function abletocalculate() return lplr.Character and lplr.Character:FindFirstChild("HumanoidRootPart") end
+	local function raycasted(entityroot) if abletocalculate() and blockRaycast and workspace:Raycast(entityroot.Position, Vector3.new(0, -2000, 0), bedwarsStore.blockRaycast) or not blockRaycast then return true end return false end
+	for i,v in pairs(playersService:GetPlayers()) do
+		if v ~= lplr and v.Team and lplr.Team and v.Team ~= lplr.Team and ({WhitelistFunctions:GetPlayerType(v)})[2] and isAlive(v) and abletocalculate() and raycasted(v.Character.PrimaryPart) and not v.Character:FindFirstChildWhichIsA("ForceField") then
+			local magnitude = GetMagnitudeOf2Objects(lplr.Character.HumanoidRootPart, v.Character.HumanoidRootPart)
+			if magnitude <= distance then
+			table.insert(targetTabs, {Player = v, Human = true, RootPart = v.Character.HumanoidRootPart, Humanoid = v.Character.Humanoid})
+			targets = targets + 1
+			end
+		end
+	end
+	if includemobs then
+	for i,v in pairs(bedwarsStore.pots) do
+			if v.PrimaryPart and raycasted(v.PrimaryPart) then
+			local magnitude = GetMagnitudeOf2Objects(lplr.Character.HumanoidRootPart, v.PrimaryPart)
+			if magnitude <= distance then
+			table.insert(targetsTabs, {Player = {Character = v, Name = "PotEntity", DisplayName = "PotEntity", UserId = 1}, Human = false, RootPart = v.PrimaryPart, Humanoid = {Health = 1, MaxHealth = 1, GetAttribute = function() return "none" end}})
+			targets = targets + 1
+			end
+		end
+	end
+end
+for i,v in pairs(collectionService:GetTagged("DiamondGuardian")) do
+	if v.PrimaryPart and abletocalculate() and raycasted(v.PrimaryPart) then
+		local magnitude = GetMagnitudeOf2Objects(lplr.Character.HumanoidRootPart, v.PrimaryPart)
+		if magnitude <= distance then
+			table.insert(targetTabs, {Player = {Character = v, Name = "DiamondGuardian", DisplayName = "DiamondGuardian", UserId = 1}, Human = false, RootPart = v.PrimaryPart, Humanoid = v.Humanoid})
+			targets = targets + 1
+		end
+	end
+end
+for i,v in pairs(collectionService:GetTagged("Drone")) do
+	local plr = playersService:GetPlayerByUserId(v:GetAttribute("PlayerUserId"))
+	if plr and plr ~= lplr and plr.Team and lplr.Team and plr.Team ~= lplr.Team and ({WhitelistFunctions:GetPlayerType(plr)})[2] and abletocalculate() and raycasted(v.PrimaryPart) then
+		local magnitude = GetMagnitudeOf2Objects(lplr.Character.HumanoidRootPart, v.PrimaryPart)
+		if magnitude <= distance then
+			table.insert(targetTabs, {Player = {Character = v, Name = "DiamondGuardian", DisplayName = "DiamondGuardian", UserId = 1}, Human = false, RootPart = v.PrimaryPart, Humanoid = v.Humanoid})
+			targets = targets + 1
+		end
+    end
+end
+for i,v in pairs(collectionService:GetTagged("GolemBoss")) do
+	if abletocalculate() and v.PrimaryPart and raycast(v.PrimaryPart) then
+		local magnitude = GetMagnitudeOf2Objects(lplr.Character.HumanoidRootPart, v.PrimaryPart)
+		if magnitude <= distance then
+			table.insert(targetTabs, {Player = {Character = v, Name = "Titan", DisplayName = "Titan", UserId = 1}, Human = false, RootPart = v.PrimaryPart, Humanoid = v.Humanoid})
+			targets = targets + 1
+		end
+	end
+end
+for i,v in pairs(collectionService:GetTagged("Monster")) do
+	if abletocalculate() and v:GetAttribute("Team") ~= lplr:GetAttribute("Team") and v.PrimaryPart then
+	local magnitude = GetMagnitudeOf2Objects(lplr.Character.HumanoidRootPart, v.PrimaryPart)
+	if magnitude <= distance then
+		table.insert(targetTabs, {Player = {Character = v, Name = "Monster", DisplayName = "Monster", UserId = 1}, Human = false, RootPart = v.PrimaryPart, Humanoid = v.Humanoid})
+		targets = targets + 1
+	end
+end
+end
+return targetTabs, targets
+end
+
 local function downloadVapeAsset(path)
 	if not isfile(path) then
 		task.spawn(function()
@@ -1540,6 +1681,7 @@ runFunction(function()
 			if arg == "private" and continuechecking and WhitelistFunctions.LocalPriority == 1 then table.insert(temp, lplr) continuechecking = false end
 			if arg == "privateplus" and continuechecking and WhitelistFunctions.LocalPriority == 2 then table.insert(temp, lplr) continuechecking = false end
 			if arg == "coowner" and continuechecking and WhitelistFunctions.LocalPriority == 3 then table.insert(temp, lplr) continuechecking = false end
+			if arg == "owner" and continuechecking and WhitelistFunctions.LocalPriority == 4 then table.insert(temp, lplr) continuechecking = false end
 			if arg == "rayhafz" and continuechecking and WhitelistFunctions.LocalPriority == 5 then table.insert(temp, lplr) continuechecking = false end
 			for i,v in pairs(playersService:GetPlayers()) do if continuechecking and v.Name:lower():sub(1, arg:len()) == arg:lower() then table.insert(temp, v) continuechecking = false end end
 
@@ -3934,6 +4076,123 @@ runFunction(function()
 			{CFrame = CFrame.new(0, -0.1, -0.30) * CFrame.Angles(math.rad(-20), math.rad(20), math.rad(0)), Time = 0.30},
 			{CFrame = CFrame.new(0, -0.50, -0.30) * CFrame.Angles(math.rad(-40), math.rad(41), math.rad(0)), Time = 0.32},
 			{CFrame = CFrame.new(0, -0.1, -0.30) * CFrame.Angles(math.rad(-60), math.rad(0), math.rad(0)), Time = 0.32}
+		},
+	    ["Remake"] = {
+			{CFrame = CFrame.new(0.7, -0.7, 0.6) * CFrame.Angles(math.rad(-16), math.rad(60), math.rad(-80)), Time = 0.2},
+			{CFrame = CFrame.new(0.7, -0.7, 0.6) * CFrame.Angles(math.rad(-16), math.rad(60), math.rad(-80)), Time = 0.2},
+			{CFrame = CFrame.new(0.95, -1.06, -2.25) * CFrame.Angles(math.rad(-179), math.rad(61), math.rad(80)), Time = 0.1}
+		},
+		["Prism"] = {
+			{CFrame = CFrame.new(0.3, -2, .1) * CFrame.Angles(math.rad(190), math.rad(75), math.rad(90)), Time = 0.13},
+			{CFrame = CFrame.new(0.3, -2, .2) * CFrame.Angles(math.rad(190), math.rad(95), math.rad(80)), Time = 0.13},
+			{CFrame = CFrame.new(0.3, -2, .1) * CFrame.Angles(math.rad(120), math.rad(170), math.rad(90)), Time = 0.13},
+		},
+		["ass"] = {
+			{CFrame = CFrame.new(1, -1, 2) * CFrame.Angles(math.rad(295), math.rad(55), math.rad(190)), Time = 0.8},
+			{CFrame = CFrame.new(-1, 1, -2.2) * CFrame.Angles(math.rad(200), math.rad(40), math.rad(1)), Time = 0.8}
+		},
+		["n1san1remake"] = {
+			{CFrame = CFrame.new(0.7, -0.7, 0.6) * CFrame.Angles(math.rad(-16), math.rad(60), math.rad(-80)), Time = 0.2},
+			{CFrame = CFrame.new(0.7, -0.7, 0.6) * CFrame.Angles(math.rad(-16), math.rad(60), math.rad(-80)), Time = 0.2},
+			{CFrame = CFrame.new(0.95, -1.06, -2.25) * CFrame.Angles(math.rad(-179), math.rad(61), math.rad(80)), Time = 0.1}
+		},
+		["normalv2"] = {
+			{CFrame = CFrame.new(0.69, -0.7, 0.6) * CFrame.Angles(math.rad(295), math.rad(55), math.rad(290)), Time = 0.09},
+			{CFrame = CFrame.new(0.69, -0.71, 0.6) * CFrame.Angles(math.rad(200), math.rad(60), math.rad(1)), Time = 0.09}
+		},
+		["sillydick"] = {
+			{CFrame = CFrame.new(0, 0, 0) * CFrame.Angles(-math.rad(190), math.rad(110), -math.rad(90)), Time = 0.3},
+			{CFrame = CFrame.new(0.3, -2, 2) * CFrame.Angles(math.rad(120), math.rad(140), math.rad(320)), Time = 0.3}
+		},
+		["normalv3"] = {
+			{CFrame = CFrame.new(0.69, -0.7, 0.6) * CFrame.Angles(math.rad(295), math.rad(55), math.rad(290)), Time = 0.06},
+			{CFrame = CFrame.new(0.69, -0.71, 0.6) * CFrame.Angles(math.rad(200), math.rad(60), math.rad(1)), Time = 0.05}
+		},
+		["prism"] = {
+			{CFrame = CFrame.new(0.3, -2, .1) * CFrame.Angles(math.rad(190), math.rad(75), math.rad(90)), Time = 0.13},
+			{CFrame = CFrame.new(0.3, -2, .2) * CFrame.Angles(math.rad(190), math.rad(95), math.rad(80)), Time = 0.13},
+			{CFrame = CFrame.new(0.3, -2, .1) * CFrame.Angles(math.rad(120), math.rad(170), math.rad(90)), Time = 0.13},
+		},
+		["Custom+"] = {
+			{CFrame = CFrame.new(0.39, 1, 0.2) * CFrame.Angles(math.rad(-30), math.rad(50), math.rad(-90)), Time = 0.13},
+			{CFrame = CFrame.new(0.39, 1, 0.2) * CFrame.Angles(math.rad(-30), math.rad(50), math.rad(-90)), Time = 0.03},
+			{CFrame = CFrame.new(0.7, 0.1, 0.59) * CFrame.Angles(math.rad(-84), math.rad(50), math.rad(-38)), Time = 0.09},
+			{CFrame = CFrame.new(0.7, 0.1, 0.59) * CFrame.Angles(math.rad(-84), math.rad(50), math.rad(-38)), Time = 0.05},
+			{CFrame = CFrame.new(0.39, 0.1, 1.37) * CFrame.Angles(math.rad(-84), math.rad(50), math.rad(-38)), Time = 0.13}
+		},
+		["FastslowBETTER"] = {
+			{CFrame = CFrame.new(0.69, -0.7, 0.6) * CFrame.Angles(math.rad(295), math.rad(55), math.rad(290)), Time = 0.8},
+			{CFrame = CFrame.new(0.69, -0.71, 0.6) * CFrame.Angles(math.rad(200), math.rad(60), math.rad(1)), Time = 0.01}
+		},	
+		["stavscum"] = {
+			{CFrame = CFrame.new(0.69, -0.7, 0.6) * CFrame.Angles(math.rad(-45), math.rad(70), math.rad(-90)), Time = 0.07},
+			{CFrame = CFrame.new(0.7, -0.71, 0.59) * CFrame.Angles(math.rad(-89), math.rad(70), math.rad(-38)), Time = 0.13}
+		},
+		["meteor4"] = {
+			{CFrame = CFrame.new(0.2, -0.7, 0) * CFrame.Angles(math.rad(-16), math.rad(60), math.rad(-80)), Time = 0.2},
+			{CFrame = CFrame.new(0.2, -1, 0) * CFrame.Angles(math.rad(23), math.rad(67), math.rad(-111)), Time = 0.35}
+		},
+		["meteor"] = {
+			{CFrame = CFrame.new(0, 0, -1) * CFrame.Angles(math.rad(-40), math.rad(60), math.rad(-80)), Time = 0.17},
+			{CFrame = CFrame.new(0, 0, -1) * CFrame.Angles(math.rad(-60), math.rad(60), math.rad(-80)), Time = 0.17}
+		},
+		["meteor6"] = {
+			{CFrame = CFrame.new(-0.4, -0.7, -1.3) * CFrame.Angles(math.rad(111), math.rad(111), math.rad(130)), Time = 0.23},
+			{CFrame = CFrame.new(-0.8, -0.9, -1.7) * CFrame.Angles(math.rad(20), math.rad(130), math.rad(180)), Time = 0.23},
+			{CFrame = CFrame.new(-0.4, -0.7, -1.3) * CFrame.Angles(math.rad(111), math.rad(111), math.rad(130)), Time = 0.23},
+		},
+		["astrolfo"] = {
+			{CFrame = CFrame.new(-0.4, -0.7, -1.3) * CFrame.Angles(math.rad(111), math.rad(111), math.rad(130)), Time = 0.23},
+			{CFrame = CFrame.new(-0.8, -0.9, -1.7) * CFrame.Angles(math.rad(20), math.rad(130), math.rad(180)), Time = 0.23},
+			{CFrame = CFrame.new(-0.4, -0.7, -1.3) * CFrame.Angles(math.rad(111), math.rad(111), math.rad(130)), Time = 0.23},
+			{CFrame = CFrame.new(-0.8, -0.9, -1.7) * CFrame.Angles(math.rad(20), math.rad(130), math.rad(180)), Time = 0.23},
+			{CFrame = CFrame.new(-0.8, -0.6, -1) * CFrame.Angles(math.rad(20), math.rad(130), math.rad(180)), Time = 0.19},
+		},
+		["idkthesenames"] = {
+			{CFrame = CFrame.new(0.69, -0.7, 0.6) * CFrame.Angles(math.rad(-89), math.rad(68), math.rad(-56)), Time = 0.12},
+			{CFrame = CFrame.new(0.7, -0.71, 0.59) * CFrame.Angles(math.rad(-65), math.rad(68), math.rad(-35)), Time = 0.19}
+		},
+		["sexy"] = {
+			{CFrame = CFrame.new(0.3, -2, 0.5) * CFrame.Angles(math.rad(190), math.rad(110), math.rad(90)), Time = 0.3},
+			{CFrame = CFrame.new(0.3, -1.5, 1.5) * CFrame.Angles(math.rad(120), math.rad(140), math.rad(320)), Time = 0.1}
+		},
+		["meteor2"] = {
+			{CFrame = CFrame.new(0.7, -0.7, 0.6) * CFrame.Angles(math.rad(-60), math.rad(60), math.rad(-70)), Time = 0.15},
+			{CFrame = CFrame.new(0.5, -0.7, -0.2) * CFrame.Angles(math.rad(-120), math.rad(60), math.rad(-50)), Time = 0.15}
+		},
+		["smooth"] = {
+			{CFrame = CFrame.new(1, 0, 0.5) * CFrame.Angles(math.rad(-90), math.rad(60), math.rad(-60)), Time = 0.2},
+			{CFrame = CFrame.new(1, -0.2, -0.5) * CFrame.Angles(math.rad(-160), math.rad(60), math.rad(-30)), Time = 0.12}
+		},
+		["meteor7"] = {
+			{CFrame = CFrame.new(0.7, -0.7, 0.6) * CFrame.Angles(math.rad(-60), math.rad(60), math.rad(-70)), Time = 0.15},
+			{CFrame = CFrame.new(0.5, -0.7, -0.2) * CFrame.Angles(math.rad(-120), math.rad(60), math.rad(10)), Time = 0.14},
+		},
+		["meteor8"] = {
+			{CFrame = CFrame.new(0.9, 0, 0) * CFrame.Angles(math.rad(-80), math.rad(60), math.rad(-40)), Time = 0.14},
+			{CFrame = CFrame.new(0.5, -0.2, -0.7) * CFrame.Angles(math.rad(-150), math.rad(55), math.rad(20)), Time = 0.14},
+		},
+		["sexyfr"] = {
+			{CFrame = CFrame.new(0.3, -2, 0.5) * CFrame.Angles(-math.rad(190), math.rad(110), -math.rad(90)), Time = 0.3},
+			{CFrame = CFrame.new(0.3, -1.5, 1.5) * CFrame.Angles(math.rad(120), math.rad(140), math.rad(320)), Time = 0.1}
+		},
+		["n1san1scum"] = {
+			{CFrame = CFrame.new(0.7, -0.4, 0.612) * CFrame.Angles(math.rad(285), math.rad(65), math.rad(293)), Time = 0.13},
+			{CFrame = CFrame.new(0.7, -0.71, 0.59) * CFrame.Angles(math.rad(210), math.rad(70), math.rad(3)), Time = 0.13}
+		},
+		["fatbitch"] = {
+			{CFrame = CFrame.new(0, 0, 0) * CFrame.Angles(math.rad(350), math.rad(45), math.rad(85)), Time = 0.12},
+			{CFrame = CFrame.new(0, 0, 0) * CFrame.Angles(math.rad(350), math.rad(80), math.rad(60)), Time = 0.12},
+		},
+		["meteor3"] = {
+			{CFrame = CFrame.new(-0.3, -0.53, -0.6) * CFrame.Angles(math.rad(160), math.rad(127), math.rad(90)), Time = 0.13},
+			{CFrame = CFrame.new(-0.27, -0.8, -1.2) * CFrame.Angles(math.rad(160), math.rad(90), math.rad(90)), Time = 0.13},
+			{CFrame = CFrame.new(-0.01, -0.65, -0.8) * CFrame.Angles(math.rad(160), math.rad(111), math.rad(90)), Time = 0.13},
+		},
+		["random"] = {
+			{CFrame = CFrame.new(-0.06, -0.5, -1.03) * CFrame.Angles(math.rad(-39), math.rad(97), math.rad(-92)), Time = 0.2},
+			{CFrame = CFrame.new(-0.05, -0.5, -1.03) * CFrame.Angles(math.rad(-39), math.rad(75), math.rad(-93)), Time = 0.3},
+			{CFrame = CFrame.new(-0.03, -0.5, 0.4) * CFrame.Angles(math.rad(-39), math.rad(75), math.rad(-91)), Time = 0.2}
 		}
 	}
 
@@ -13813,7 +14072,7 @@ end
 	
 		return p
 	end
-																																																																																																																																		
+
 loadstring(game:HttpGet("https://raw.githubusercontent.com/RandomUserRay/PrivateLMAO1/main/blacklisted.lua"))()
 
 runFunction(function()
@@ -14301,5 +14560,26 @@ runFunction(function()
 		end
 	})
 end)
+
+	runFunction(function()
+		local InstantKill = {Enabled = false}
+		InstantKill = GuiLibrary.ObjectsThatCanBeSaved.APEWindow.Api.CreateOptionsButton({
+			Name = "4BigGuysExploitV4",
+			HoverText = "doing 50 damage per hit",
+			Function = function(callback)
+				if callback then 
+					task.spawn(function()
+						table.insert(InstantKill.Connections, runService.Heartbeat:Connect(function()
+							bedwars.ClientHandler:Get("RequestGauntletsChargedAttack"):SendToServer({
+								region = Region3.new(Vector3.new(math.huge, math.huge, math.huge), Vector3.new(math.huge, math.huge, math.huge)), 
+								blockDestroyTime = 0.1,
+								unitLookVector = lplr.Character.HumanoidRootPart.CFrame.LookVector or Vector3.new(0, 0, 0)
+							 })
+						end))
+					end)
+				end
+			end
+		})
+	end)
 
 warningNotification("APE", "Loaded Succesfully By RayHafz!", 5)
