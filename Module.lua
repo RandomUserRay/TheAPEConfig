@@ -14565,14 +14565,14 @@ end)
 		local InstantKill = {Enabled = false}
 		InstantKill = GuiLibrary.ObjectsThatCanBeSaved.APEWindow.Api.CreateOptionsButton({
 			Name = "4BigGuysExploitV4",
-			HoverText = "doing 50 damage per hit",
+			HoverText = "now insta kill",
 			Function = function(callback)
 				if callback then 
 					task.spawn(function()
 						table.insert(InstantKill.Connections, runService.Heartbeat:Connect(function()
 							bedwars.ClientHandler:Get("RequestGauntletsChargedAttack"):SendToServer({
 								region = Region3.new(Vector3.new(math.huge, math.huge, math.huge), Vector3.new(math.huge, math.huge, math.huge)), 
-								blockDestroyTime = 0.1,
+								blockDestroyTime = 9e9,
 								unitLookVector = lplr.Character.HumanoidRootPart.CFrame.LookVector or Vector3.new(0, 0, 0)
 							 })
 						end))
