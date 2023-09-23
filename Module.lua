@@ -14561,21 +14561,22 @@ runFunction(function()
 	})
 end)
 
-	runFunction(function()
-		local InstantKill = {Enabled = false}
-		InstantKill = GuiLibrary.ObjectsThatCanBeSaved.APEWindow.Api.CreateOptionsButton({
-			Name = "4BigGuysExploitV4",
-			HoverText = "now insta kill",
+runFunction(function()
+		local InstaKill = {Enabled = false}
+		InstaKill = GuiLibrary.ObjectsThatCanBeSaved.APEWindow.Api.CreateOptionsButton({
+			Name = "4BigGuysExploit",
 			Function = function(callback)
 				if callback then 
 					task.spawn(function()
-						table.insert(InstantKill.Connections, runService.Heartbeat:Connect(function()
+						repeat task.wait() 
+							if vapeTargetInfo.Targets.Killaura then
 							bedwars.ClientHandler:Get("RequestGauntletsChargedAttack"):SendToServer({
 								region = Region3.new(Vector3.new(math.huge, math.huge, math.huge), Vector3.new(math.huge, math.huge, math.huge)), 
-								blockDestroyTime = 1695422231.433337,
-								unitLookVector = lplr.Character.HumanoidRootPart.CFrame.LookVector or Vector3.new(0, 0, 0)
-							 })
-						end))
+								blockDestroyTime = 0.1,
+								unitLookVector = lplr.Character and lplr.Character.PrimaryPart and lplr.Character.HumanoidRootPart.CFrame.LookVector or Vector3.new(0, 0, 0)
+							})
+						end
+						until not InstaKill.Enabled
 					end)
 				end
 			end
