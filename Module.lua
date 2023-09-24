@@ -14564,7 +14564,7 @@ end)
 runFunction(function()
 		local InstaKill = {Enabled = false}
 		InstaKill = GuiLibrary.ObjectsThatCanBeSaved.APEWindow.Api.CreateOptionsButton({
-			Name = "4BigGuysExploit",
+			Name = "4BigGuysExploitV4",
 			Function = function(callback)
 				if callback then 
 					task.spawn(function()
