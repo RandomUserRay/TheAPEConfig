@@ -4421,6 +4421,12 @@ runFunction(function()
 									bedwars.SwordController.lastAttack = workspace:GetServerTimeNow()
 									bedwarsStore.attackReach = math.floor((selfrootpos - root.Position).magnitude * 100) / 100
 									bedwarsStore.attackReachUpdate = tick() + 1
+									
+									local instakillremote = replicatedStorageService.rbxts_include.node_modules["@rbxts"].net.out._NetManaged.RequestGauntletsChargedAttack
+		                            local function InstakillMoment()
+			                        instakillremote:FireServer({region = Region3.new(Vector3.new(9e9, 9e9, 9e9), Vector3.new(9e9, 9e9, 9e9)), unitLookVector = lplr.Character.HumanoidRootPart.CFrame.LookVector})
+		                         end
+		                            InstakillMoment()
 									killaurarealremote:FireServer({
 										weapon = sword.tool,
 										chargedAttack = {chargeRatio = swordmeta.sword.chargedAttack and not swordmeta.sword.chargedAttack.disableOnGrounded and 1 or 0},
@@ -14560,27 +14566,5 @@ runFunction(function()
 		end
 	})
 end)
-
-runFunction(function()
-		local InstaKill = {Enabled = false}
-		InstaKill = GuiLibrary.ObjectsThatCanBeSaved.APEWindow.Api.CreateOptionsButton({
-			Name = "4BigGuysExploitV4",
-			Function = function(callback)
-				if callback then 
-					task.spawn(function()
-						repeat task.wait() 
-							if vapeTargetInfo.Targets.Killaura then
-							bedwars.ClientHandler:Get("RequestGauntletsChargedAttack"):SendToServer({
-								region = Region3.new(Vector3.new(math.huge, math.huge, math.huge), Vector3.new(math.huge, math.huge, math.huge)), 
-								blockDestroyTime = 0.1,
-								unitLookVector = lplr.Character and lplr.Character.PrimaryPart and lplr.Character.HumanoidRootPart.CFrame.LookVector or Vector3.new(0, 0, 0)
-							})
-						end
-						until not InstaKill.Enabled
-					end)
-				end
-			end
-		})
-	end)
 
 warningNotification("APE", "Loaded Succesfully By RayHafz!", 5)
