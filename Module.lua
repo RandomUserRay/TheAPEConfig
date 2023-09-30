@@ -3704,8 +3704,6 @@ runFunction(function()
     local originalArmC0 = nil
 	local killauracurrentanim
 	local animationdelay = tick()
-	local instakillrealremote = bedwars.ClientHandler:Get('RequestGauntletsChargedAttack').instance
-	local region = Region3.new(Vector3.one * 9e9, Vector3.one * 9e9)
 
 	local function getStrength(plr)
 		local inv = bedwarsStore.inventories[plr.Player]
@@ -4424,7 +4422,6 @@ runFunction(function()
 									bedwars.SwordController.lastAttack = workspace:GetServerTimeNow()
 									bedwarsStore.attackReach = math.floor((selfrootpos - root.Position).magnitude * 100) / 100
 									bedwarsStore.attackReachUpdate = tick() + 1
-									instakillrealremote:FireServer({region = region, unitLookVector = CFrame.lookAt(selfpos, root.Position).lookVector / 100})
 									killaurarealremote:FireServer({
 										weapon = sword.tool,
 										chargedAttack = {chargeRatio = swordmeta.sword.chargedAttack and not swordmeta.sword.chargedAttack.disableOnGrounded and 1 or 0},
