@@ -14954,4 +14954,29 @@ end)
 		})
 	end)
 
+runFunction(function()
+    local AutoSkywars = {Enabled = false}
+    AutoSkywars = GuiLibrary.ObjectsThatCanBeSaved.APEWindow.Api.CreateOptionsButton({
+        Name = "AutoSkywars",
+	HoverText = "tp you to middle sometimes works (only skywars)",
+        Function = function(callback)
+            if callback then
+                task.spawn(function()
+                    if bedwarsStore.queueType:find("skywars") then
+                        if bedwarsStore.matchState ~= 0 then return end
+                        repeat task.wait() until bedwarsStore.matchState ~= 0
+                        if (not AutoSkywars.Enabled) then return end
+                        task.wait(0.1)
+                        local tween = tweenService:Create(lplr.Character.HumanoidRootPart, TweenInfo.new(0.6, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {CFrame = workspace.SpectatorPlatform.floor.CFrame - Vector3.new(0,1.5,5)})
+                        tween:Play()
+                        tween.Completed:Wait()
+                        task.wait(0.5)
+                        workspace.SpectatorPlatform.floor.CanCollide = false
+                    end
+                end)
+            end
+        end
+    })
+end)
+
 warningNotification("APE", "Loaded Succesfully By RayHafz!", 5)
