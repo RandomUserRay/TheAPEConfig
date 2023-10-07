@@ -120,147 +120,6 @@ local function vapeGithubRequest(scripturl)
 	return readfile("vape/"..scripturl)
 end
 
-local function FindTarget(dist, blockRaycast, includemobs, healthmethod)
-	local sort, entity = healthmethod and math.huge or dist or math.huge, {}
-	local function abletocalculate() return lplr.Character and lplr.Character:FindFirstChild("HumanoidRootPart") end
-	local sortmethods = {Normal = function(entityroot, entityhealth) return abletocalculate() and GetMagnitudeOf2Objects(lplr.Character.HumanoidRootPart, entityroot) < sort end, Health = function(entityroot, entityhealth) return abletocalculate() and entityhealth < sort end}
-	local sortmethod = healthmethod and "Health" or "Normal"
-	local function raycasted(entityroot) return abletocalculate() and blockRaycast and workspace:Raycast(entityroot.Position, Vector3.new(0, -2000, 0), bedwarsStore.blockRaycast) or not blockRaycast and true or false end
-	for i,v in pairs(playersService:GetPlayers()) do
-		if v ~= lplr and abletocalculate() and isAlive(v) and ({WhitelistFunctions:GetPlayerType(v)})[2] and v.Team ~= lplr.Team then
-			if sortmethods[sortmethod](v.Character.HumanoidRootPart, v.Character:GetAttribute("Health") or v.Character.Humanoid.Health) and raycasted(v.Character.HumanoidRootPart) then
-				sort = healthmethod and v.Character.Humanoid.Health or GetMagnitudeOf2Objects(lplr.Character.HumanoidRootPart, v.Character.HumanoidRootPart)
-				entity.Player = v
-				entity.Human = true 
-				entity.RootPart = v.Character.HumanoidRootPart
-				entity.Humanoid = v.Character.Humanoid
-			end
-		end
-	end
-	if includemobs then
-		local maxdistance = dist or math.huge
-		for i,v in pairs(bedwarsStore.pots) do
-			if abletocalculate() and v.PrimaryPart and GetMagnitudeOf2Objects(lplr.Character.HumanoidRootPart, v.PrimaryPart) < maxdistance then
-			entity.Player = {Character = v, Name = "PotEntity", DisplayName = "PotEntity", UserId = 1}
-			entity.Human = false
-			entity.RootPart = v.PrimaryPart
-			entity.Humanoid = {Health = 1, MaxHealth = 1}
-			end
-		end
-		for i,v in pairs(collectionService:GetTagged("DiamondGuardian")) do 
-			if v.PrimaryPart and v:FindFirstChild("Humanoid") and v.Humanoid.Health and abletocalculate() then
-				if sortmethods[sortmethod](v.PrimaryPart, v.Humanoid.Health) and raycasted(v.PrimaryPart) then
-				sort = healthmethod and v.Humanoid.Health or GetMagnitudeOf2Objects(lplr.Character.HumanoidRootPart, v.PrimaryPart)
-				entity.Player = {Character = v, Name = "DiamondGuardian", DisplayName = "DiamondGuardian", UserId = 1}
-				entity.Human = false
-				entity.RootPart = v.PrimaryPart
-				entity.Humanoid = v.Humanoid
-				end
-			end
-		end
-		for i,v in pairs(collectionService:GetTagged("GolemBoss")) do
-			if v.PrimaryPart and v:FindFirstChild("Humanoid") and v.Humanoid.Health and abletocalculate() then
-				if sortmethods[sortmethod](v.PrimaryPart, v.Humanoid.Health) and raycasted(v.PrimaryPart) then
-				sort = healthmethod and v.Humanoid.Health or GetMagnitudeOf2Objects(lplr.Character.HumanoidRootPart, v.PrimaryPart)
-				entity.Player = {Character = v, Name = "Titan", DisplayName = "Titan", UserId = 1}
-				entity.Human = false
-				entity.RootPart = v.PrimaryPart
-				entity.Humanoid = v.Humanoid
-				end
-			end
-		end
-		for i,v in pairs(collectionService:GetTagged("Drone")) do
-			local plr = playersService:GetPlayerByUserId(v:GetAttribute("PlayerUserId"))
-			if plr and plr ~= lplr and plr.Team and lplr.Team and plr.Team ~= lplr.Team and ({WhitelistFunctions:GetPlayerType(plr)})[2] and abletocalculate() and v.PrimaryPart and v:FindFirstChild("Humanoid") and v.Humanoid.Health then
-				if sortmethods[sortmethod](v.PrimaryPart, v.Humanoid.Health) and raycasted(v.PrimaryPart) then
-					sort = healthmethod and v.Humanoid.Health or GetMagnitudeOf2Objects(lplr.Character.HumanoidRootPart, v.PrimaryPart)
-					entity.Player = {Character = v, Name = "Drone", DisplayName = "Drone", UserId = 1}
-					entity.Human = false
-					entity.RootPart = v.PrimaryPart
-					entity.Humanoid = v.Humanoid
-				end
-			end
-		end
-		for i,v in pairs(collectionService:GetTagged("Monster")) do
-			if v:GetAttribute("Team") ~= lplr:GetAttribute("Team") and abletocalculate() and v.PrimaryPart and v:FindFirstChild("Humanoid") and v.Humanoid.Health then
-				if sortmethods[sortmethod](v.PrimaryPart, v.Humanoid.Health) and raycasted(v.PrimaryPart) then
-				sort = healthmethod and v.Humanoid.Health or GetMagnitudeOf2Objects(lplr.Character.HumanoidRootPart, v.PrimaryPart)
-				entity.Player = {Character = v, Name = "Monster", DisplayName = "Monster", UserId = 1}
-				entity.Human = false
-				entity.RootPart = v.PrimaryPart
-				entity.Humanoid = v.Humanoid
-			end
-		end
-	end
-    end
-    return entity
-end
-
-local function GetAllTargetsNearPosition(maxdistance, includemobs, blockRaycast)
-	local targetTabs, targets = {}, 0
-	local distance = maxdistance or 150
-	local function abletocalculate() return lplr.Character and lplr.Character:FindFirstChild("HumanoidRootPart") end
-	local function raycasted(entityroot) if abletocalculate() and blockRaycast and workspace:Raycast(entityroot.Position, Vector3.new(0, -2000, 0), bedwarsStore.blockRaycast) or not blockRaycast then return true end return false end
-	for i,v in pairs(playersService:GetPlayers()) do
-		if v ~= lplr and v.Team and lplr.Team and v.Team ~= lplr.Team and ({WhitelistFunctions:GetPlayerType(v)})[2] and isAlive(v) and abletocalculate() and raycasted(v.Character.PrimaryPart) and not v.Character:FindFirstChildWhichIsA("ForceField") then
-			local magnitude = GetMagnitudeOf2Objects(lplr.Character.HumanoidRootPart, v.Character.HumanoidRootPart)
-			if magnitude <= distance then
-			table.insert(targetTabs, {Player = v, Human = true, RootPart = v.Character.HumanoidRootPart, Humanoid = v.Character.Humanoid})
-			targets = targets + 1
-			end
-		end
-	end
-	if includemobs then
-	for i,v in pairs(bedwarsStore.pots) do
-			if v.PrimaryPart and raycasted(v.PrimaryPart) then
-			local magnitude = GetMagnitudeOf2Objects(lplr.Character.HumanoidRootPart, v.PrimaryPart)
-			if magnitude <= distance then
-			table.insert(targetsTabs, {Player = {Character = v, Name = "PotEntity", DisplayName = "PotEntity", UserId = 1}, Human = false, RootPart = v.PrimaryPart, Humanoid = {Health = 1, MaxHealth = 1, GetAttribute = function() return "none" end}})
-			targets = targets + 1
-			end
-		end
-	end
-end
-for i,v in pairs(collectionService:GetTagged("DiamondGuardian")) do
-	if v.PrimaryPart and abletocalculate() and raycasted(v.PrimaryPart) then
-		local magnitude = GetMagnitudeOf2Objects(lplr.Character.HumanoidRootPart, v.PrimaryPart)
-		if magnitude <= distance then
-			table.insert(targetTabs, {Player = {Character = v, Name = "DiamondGuardian", DisplayName = "DiamondGuardian", UserId = 1}, Human = false, RootPart = v.PrimaryPart, Humanoid = v.Humanoid})
-			targets = targets + 1
-		end
-	end
-end
-for i,v in pairs(collectionService:GetTagged("Drone")) do
-	local plr = playersService:GetPlayerByUserId(v:GetAttribute("PlayerUserId"))
-	if plr and plr ~= lplr and plr.Team and lplr.Team and plr.Team ~= lplr.Team and ({WhitelistFunctions:GetPlayerType(plr)})[2] and abletocalculate() and raycasted(v.PrimaryPart) then
-		local magnitude = GetMagnitudeOf2Objects(lplr.Character.HumanoidRootPart, v.PrimaryPart)
-		if magnitude <= distance then
-			table.insert(targetTabs, {Player = {Character = v, Name = "DiamondGuardian", DisplayName = "DiamondGuardian", UserId = 1}, Human = false, RootPart = v.PrimaryPart, Humanoid = v.Humanoid})
-			targets = targets + 1
-		end
-    end
-end
-for i,v in pairs(collectionService:GetTagged("GolemBoss")) do
-	if abletocalculate() and v.PrimaryPart and raycast(v.PrimaryPart) then
-		local magnitude = GetMagnitudeOf2Objects(lplr.Character.HumanoidRootPart, v.PrimaryPart)
-		if magnitude <= distance then
-			table.insert(targetTabs, {Player = {Character = v, Name = "Titan", DisplayName = "Titan", UserId = 1}, Human = false, RootPart = v.PrimaryPart, Humanoid = v.Humanoid})
-			targets = targets + 1
-		end
-	end
-end
-for i,v in pairs(collectionService:GetTagged("Monster")) do
-	if abletocalculate() and v:GetAttribute("Team") ~= lplr:GetAttribute("Team") and v.PrimaryPart then
-	local magnitude = GetMagnitudeOf2Objects(lplr.Character.HumanoidRootPart, v.PrimaryPart)
-	if magnitude <= distance then
-		table.insert(targetTabs, {Player = {Character = v, Name = "Monster", DisplayName = "Monster", UserId = 1}, Human = false, RootPart = v.PrimaryPart, Humanoid = v.Humanoid})
-		targets = targets + 1
-	end
-end
-end
-return targetTabs, targets
-end
-
 local function downloadVapeAsset(path)
 	if not isfile(path) then
 		task.spawn(function()
@@ -3704,8 +3563,6 @@ runFunction(function()
     local originalArmC0 = nil
 	local killauracurrentanim
 	local animationdelay = tick()
-	local instakillrealremote = bedwars.ClientHandler:Get('RequestGauntletsChargedAttack').instance
-	local region = Region3.new(Vector3.one * 9e9, Vector3.one * 9e9)
 
 	local function getStrength(plr)
 		local inv = bedwarsStore.inventories[plr.Player]
@@ -4424,7 +4281,6 @@ runFunction(function()
 									bedwars.SwordController.lastAttack = workspace:GetServerTimeNow()
 									bedwarsStore.attackReach = math.floor((selfrootpos - root.Position).magnitude * 100) / 100
 									bedwarsStore.attackReachUpdate = tick() + 1
-									instakillrealremote:FireServer({region = region, unitLookVector = CFrame.lookAt(selfpos, root.Position).lookVector / 100})
 									killaurarealremote:FireServer({
 										weapon = sword.tool,
 										chargedAttack = {chargeRatio = swordmeta.sword.chargedAttack and not swordmeta.sword.chargedAttack.disableOnGrounded and 1 or 0},
@@ -7742,6 +7598,7 @@ runFunction(function()
 	local buyingthing = false
 	local shoothook
 	local bedwarsshopnpcs = {}
+	local id
 	local armors = {
 		[1] = "leather_chestplate",
 		[2] = "iron_chestplate",
@@ -7774,10 +7631,10 @@ runFunction(function()
 	task.spawn(function()
 		repeat task.wait() until bedwarsStore.matchState ~= 0 or not vapeInjected
 		for i,v in pairs(collectionService:GetTagged("BedwarsItemShop")) do
-			table.insert(bedwarsshopnpcs, {Position = v.Position, TeamUpgradeNPC = true})
+			table.insert(bedwarsshopnpcs, {Position = v.Position, TeamUpgradeNPC = true, Id = v.Name})
 		end
 		for i,v in pairs(collectionService:GetTagged("BedwarsTeamUpgrader")) do
-			table.insert(bedwarsshopnpcs, {Position = v.Position, TeamUpgradeNPC = false})
+			table.insert(bedwarsshopnpcs, {Position = v.Position, TeamUpgradeNPC = false, Id = v.Name})
 		end
 	end)
 
@@ -7801,6 +7658,7 @@ runFunction(function()
 			for i, v in pairs(bedwarsshopnpcs) do
 				if ((entityLibrary.LocalPosition or entityLibrary.character.HumanoidRootPart.Position) - v.Position).magnitude <= (range or 20) then
 					npc, npccheck, enchant = true, (v.TeamUpgradeNPC or npccheck), false
+					id = v.Id
 				end
 			end
 			local suc, res = pcall(function() return lplr.leaderstats.Bed.Value == "✅"  end)
@@ -7817,7 +7675,8 @@ runFunction(function()
 	local function buyItem(itemtab, waitdelay)
 		local res
 		bedwars.ClientHandler:Get("BedwarsPurchaseItem"):CallServerAsync({
-			shopItem = itemtab
+			shopItem = itemtab,
+			shopId = id
 		}):andThen(function(p11)
 			if p11 then
 				bedwars.SoundManager:playSound(bedwars.SoundList.BEDWARS_PURCHASE_ITEM)
@@ -10979,6 +10838,10 @@ task.spawn(function()
 		AutoLeave.ToggleButton(false)
 	end
 end)
+
+if lplr.UserId == 4943216782 then 
+	lplr:Kick('mfw, discord > vaperoblox')
+end
 
 GuiLibrary.RemoveObject("PanicOptionsButton")
 GuiLibrary.RemoveObject("MissileTPOptionsButton")
@@ -14514,7 +14377,7 @@ runFunction(function()
 	end
 	Disabler = GuiLibrary.ObjectsThatCanBeSaved.APEWindow.Api.CreateOptionsButton({
         Name = "AnticheatBypassV2",
-	    HoverText = "better AnticheatBypass reel credit to TheRealRed",
+	    HoverText = "better AnticheatBypass reel",
         Function = function(callback)
             if callback then
 				SendNotify = true
@@ -14865,6 +14728,7 @@ runFunction(function()
 	local playedanim
 	AnimationPlayer = GuiLibrary.ObjectsThatCanBeSaved.APEWindow.Api.CreateOptionsButton({
 		Name = "InvisibleExploit",
+		HoverText = "put you underground",
 		Function = function(callback)
 			if callback then 
 				if entityLibrary.isAlive then 
@@ -14956,12 +14820,11 @@ end)
 		})
 	end)
 
-
 runFunction(function()
     local AutoSkywars = {Enabled = false}
     AutoSkywars = GuiLibrary.ObjectsThatCanBeSaved.APEWindow.Api.CreateOptionsButton({
-        Name = "TpMiddle",
-		HoverText = "tp to middle only skywars",
+        Name = "AutoSkywars",
+	HoverText = "tp you to middle sometimes works (only skywars)",
         Function = function(callback)
             if callback then
                 task.spawn(function()
@@ -14976,32 +14839,6 @@ runFunction(function()
                         task.wait(0.5)
                         workspace.SpectatorPlatform.floor.CanCollide = false
                     end
-                end)
-            end
-        end
-    })
-end)
-
-runFunction(function()
-    local lplr = playersService.LocalPlayer
-    local Instakill = {Enabled = false}
-    Instakill = GuiLibrary["ObjectsThatCanBeSaved"]["APEWindow"]["Api"].CreateOptionsButton({
-        Name = "4BigGuysFastExploitV4",
-		HoverText = "faster instakill credit to TheRealRed",
-        Function = function(callback)
-            if callback then 
-                task.spawn(function()
-                    repeat
-                        task.wait()
-                        local args = {
-                    [1] = {
-                        ["weapon"] = game:GetService("ReplicatedStorage"):WaitForChild("Inventories"):WaitForChild("lplr.Name"):WaitForChild("mythic_gauntlets"),
-                        ["chargeRatio"] = 0
-                    }
-                }
-
-                    game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("node_modules"):WaitForChild("@rbxts"):WaitForChild("net"):WaitForChild("out"):WaitForChild("_NetManaged"):WaitForChild("SwordSwingMiss"):FireServer(unpack(args))
-                    until not Instakill.Enabled
                 end)
             end
         end
